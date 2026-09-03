@@ -1,4 +1,4 @@
-# Enterprise Agent Framework — CLI Scaffolding MVP
+# Enterprise Agent Framework - CLI Scaffolding MVP
 
 This is the first control-plane milestone for the planned enterprise agent/workflow framework.
 
@@ -18,7 +18,7 @@ For a no-API-key smoke test, put `LLM_PROVIDER=mock` in `.env`.
 Then run:
 
 ```bash
-eaf
+python -m enterprise_agent_framework.cli.main
 ```
 
 ## Runtime boundary
