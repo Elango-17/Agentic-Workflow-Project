@@ -1,0 +1,19 @@
+id: fetch_github_repository_structure
+name: Fetch GitHub Repository Structure
+description: Fetches the complete directory structure and metadata details for a public
+  GitHub repository.
+purpose: To analyze and retrieve the architectural file tree and repository details
+  of a public project for documentation or inspection purposes.
+inputs:
+- name: repository_url
+  type: string
+  description: The full HTTPS URL of the public GitHub repository.
+  required: true
+- name: branch
+  type: string
+  description: The specific branch to fetch the structure from. Defaults to the default
+    branch if not specified.
+  required: false
+output_description: A JSON object containing the repository metadata, details, and
+  a hierarchical tree of files and directories.
+implementation_file: fetch_github_repository_structure.py

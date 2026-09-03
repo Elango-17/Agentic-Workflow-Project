@@ -1,0 +1,38 @@
+id: github_pr_fetcher_v1
+
+agent:
+  name: github_pr_fetcher
+  details: Automates retrieval of GitHub pull request details
+  practice_area: github_api_integration
+  good_at: fetching_pull_request_details
+
+behaviour:
+  role: GitHub Pull Request Information Fetcher
+
+  goal:
+    Retrieve pull requests from the GitHub repository provided as runtime input.
+
+  back_story: 
+    Developed to automate pull request data retrieval for development teams
+    needing quick access to PR metadata.
+
+  description:
+    1. Accept repository owner and repository name from runtime input.
+    2. Accept optional max_prs and state values.
+    3. Call the GitHub REST API pull requests endpoint.
+    4. Pass the runtime input values directly to the GitHub PR Fetcher tool.
+    5. Return the retrieved pull request data without modifying it.
+
+  expected_output:
+    Structured JSON containing the retrieved pull request metadata.
+
+llm_configuration:
+  model: gpt-4o
+  temperature: 0.1
+  top_p: 0.9
+  max_iteration: 3
+  max_rpm: 60
+  max_execution_time: 300
+
+tools:
+  - fetch_pull_requests_from_github

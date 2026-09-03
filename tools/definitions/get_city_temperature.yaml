@@ -1,0 +1,13 @@
+id: get_city_temperature
+name: Get City Temperature
+description: Retrieves the current temperature for a specified city using a free weather
+  API.
+purpose: Provide real-time temperature data for a given city to the user.
+inputs:
+- name: city
+  type: string
+  description: The name of the city for which to retrieve the temperature.
+  required: true
+output_description: A JSON object containing the current temperature and temperature
+  unit for the specified city.
+implementation_file: get_city_temperature.py

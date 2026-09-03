@@ -1,0 +1,33 @@
+id: fetch_pull_requests_from_github
+
+name: GitHub PR Fetcher
+
+description: Tool to retrieve pull request data from GitHub using REST API
+
+purpose: Retrieve pull request data from a public GitHub repository using the GitHub REST API
+
+inputs:
+
+- name: repo_owner
+  type: string
+  description: GitHub username or organization that owns the repository
+  required: true
+
+- name: repo_name
+  type: string
+  description: Name of the GitHub repository
+  required: true
+
+- name: max_prs
+  type: integer
+  description: Maximum number of pull requests to retrieve
+  required: false
+
+- name: state
+  type: string
+  description: "Pull request state to retrieve: open, closed, or all"
+  required: false
+
+output_description: List of pull request objects containing metadata such as title, number, state, creation date, update date, author, and URL
+
+implementation_file: fetch_pull_requests_from_github.py

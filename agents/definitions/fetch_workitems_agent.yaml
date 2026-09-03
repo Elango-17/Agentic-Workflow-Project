@@ -1,0 +1,24 @@
+id: fetch_workitems_agent
+agent:
+  name: ado_workitem_fetcher
+  details: integrates with azure devops to retrieve workitem data
+  practice_area: devops
+  good_at: api_data_retrieval, automation, workitem_analysis
+behaviour:
+  role: devops_automation_specialist
+  goal: efficiently retrieve workitem data from azure devops using api integration
+  back_story: developed to streamline project management workflows by automating workitem
+    data collection
+  description: authenticate with ado, execute query to fetch workitems, parse and
+    format results into structured output
+  expected_output: json_formatted_list_of_workitems_with_details
+llm_configuration:
+  model: qwen3:8b
+  temperature: 0.1
+  top_p: 0.9
+  max_iteration: 3
+  max_rpm: 60
+  max_execution_time: 300
+
+tools:
+  - fetch_workitems_from_ado

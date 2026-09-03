@@ -1,0 +1,24 @@
+id: fetch_workitems_from_ado
+name: ADO Workitem Fetcher
+description: Tool to retrieve workitems from Azure DevOps (ADO) using REST API
+purpose: Automate retrieval of workitem data for reporting, analysis, or integration purposes
+
+inputs:
+  - name: workitem_type
+    type: string
+    description: Type of workitem to fetch, such as Task, User Story, or Bug
+    required: false
+
+  - name: query_parameters
+    type: object
+    description: Additional query parameters for filtering workitems
+    required: false
+
+  - name: include_relations
+    type: boolean
+    description: Whether to include related workitems
+    required: false
+
+output_description: List of workitems in JSON format containing basic properties and relations if specified
+
+implementation_file: fetch_workitems_from_ado.py

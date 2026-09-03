@@ -1,0 +1,29 @@
+id: repository_ast_analyzer
+name: Repository AST Analyzer
+description: Accesses a Python source-code repository and extracts its Abstract Syntax
+  Tree (AST) structure, metrics, and potentially dangerous patterns using deterministic
+  parsing.
+purpose: Perform deterministic static source-code analysis on a Python repository
+  to extract structural AST details, metrics, and security anti-patterns for downstream
+  agents.
+inputs:
+- name: repository_path
+  type: string
+  description: Repository URL or local repository path.
+  required: true
+- name: branch_name
+  type: string
+  description: Optional branch name for remote repositories.
+  required: false
+- name: include_paths
+  type: array
+  description: Optional list of files or directories to analyze.
+  required: false
+- name: max_files
+  type: integer
+  description: Optional maximum number of Python files to analyze.
+  required: false
+output_description: A structured JSON object containing repository information, analysis
+  summary, successfully analyzed files with their AST structure, unparseable files,
+  structural metrics, potentially dangerous patterns, and analysis errors.
+implementation_file: repository_ast_analyzer.py
