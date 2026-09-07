@@ -1,0 +1,18 @@
+id: test_loop_workflow
+name: Test Loop Workflow
+description: Test workflow for validating loop execution
+practice_area: Testing
+good_at: loop_execution
+agents:
+- test_case_generator_v1
+
+execution:
+  type: graph
+
+  steps:
+
+    - id: step_1
+      type: loop
+      agent: test_case_generator_v1
+      max_iterations: 2
+      next: null

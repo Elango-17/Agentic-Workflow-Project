@@ -1,13 +1,13 @@
 import ast
 import typer
-from enterprise_agent_framework.config import (
+from config import (
     TOOL_DEFINITIONS_DIR,
     TOOL_IMPLEMENTATIONS_DIR,
 )
 from tools.tool_factory import ToolFactory
-from enterprise_agent_framework.utils.editor import open_in_editor
-from enterprise_agent_framework.utils.slug import slugify
-from enterprise_agent_framework.cli.ui import (
+from utils.editor import open_in_editor
+from utils.slug import slugify
+from cli.ui import (
     info,
     success,
 )

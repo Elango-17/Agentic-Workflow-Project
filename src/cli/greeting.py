@@ -1,0 +1,45 @@
+import getpass
+from datetime import datetime
+
+
+def get_user_name() -> str:
+    """
+    Get the current operating system username.
+    """
+    return getpass.getuser()
+
+
+def get_greeting() -> str:
+    """
+    Return a greeting based on the current local time.
+    """
+
+    current_hour = datetime.now().hour
+
+    if current_hour < 12:
+        return "Good Morning🌅"
+
+    if current_hour < 17:
+        return "Good Afternoon🌄"
+
+    if current_hour < 21:
+            return "Good Evening🌄"
+
+    return "Good Night🌃"
+
+
+def get_welcome_message() -> str:
+    """
+    Build the complete welcome message.
+    """
+
+    user_name = get_user_name()
+    greeting = get_greeting()
+
+    return (
+        "=============================================================\n"
+        f"           Hello {user_name}👾!,{greeting}\n"
+        "         What would you like to do today?\n"
+        "Build, manage, and execute AI agents, tools, and workflows.\n"
+        "============================================================="
+    )

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import yaml
 
-from enterprise_agent_framework.exceptions import (
+from exceptions import (
     ArtifactNotFoundError,
 )
 
@@ -34,7 +34,7 @@ class WorkflowRegistry:
 
         path.write_text(
             yaml.safe_dump(
-                spec.model_dump(),
+                spec.model_dump(exclude_none=True),
                 sort_keys=False,
                 allow_unicode=True,
             ),

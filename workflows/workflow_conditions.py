@@ -14,7 +14,7 @@ def evaluate_condition(
         )
 
     # -----------------------------------------
-    # contains
+    # Contains
     # -----------------------------------------
 
     if " contains " in condition:
@@ -24,9 +24,7 @@ def evaluate_condition(
             1,
         )
 
-        value = context.get(
-            left.strip()
-        )
+        value = context.get(left.strip())
 
         expected = right.strip().strip(
             "\"'"
@@ -40,28 +38,7 @@ def evaluate_condition(
         ).lower()
 
     # -----------------------------------------
-    # equals
-    # -----------------------------------------
-
-    if "==" in condition:
-
-        left, right = condition.split(
-            "==",
-            1,
-        )
-
-        value = context.get(
-            left.strip()
-        )
-
-        expected = right.strip().strip(
-            "\"'"
-        )
-
-        return str(value) == expected
-
-    # -----------------------------------------
-    # not equals
+    # Not equals
     # -----------------------------------------
 
     if "!=" in condition:
@@ -71,15 +48,140 @@ def evaluate_condition(
             1,
         )
 
-        value = context.get(
-            left.strip()
-        )
+        value = context.get(left.strip())
 
         expected = right.strip().strip(
             "\"'"
         )
 
         return str(value) != expected
+
+    # -----------------------------------------
+    # Greater than or equal
+    # -----------------------------------------
+
+    if ">=" in condition:
+
+        left, right = condition.split(
+            ">=",
+            1,
+        )
+
+        value = context.get(left.strip())
+
+        if value is None:
+            return False
+
+        try:
+            return float(value) >= float(
+                right.strip()
+            )
+
+        except (TypeError, ValueError):
+            raise ValueError(
+                f"Condition values must be numeric: "
+                f"{condition}"
+            )
+
+    # -----------------------------------------
+    # Less than or equal
+    # -----------------------------------------
+
+    if "<=" in condition:
+
+        left, right = condition.split(
+            "<=",
+            1,
+        )
+
+        value = context.get(left.strip())
+
+        if value is None:
+            return False
+
+        try:
+            return float(value) <= float(
+                right.strip()
+            )
+
+        except (TypeError, ValueError):
+            raise ValueError(
+                f"Condition values must be numeric: "
+                f"{condition}"
+            )
+
+    # -----------------------------------------
+    # Greater than
+    # -----------------------------------------
+
+    if ">" in condition:
+
+        left, right = condition.split(
+            ">",
+            1,
+        )
+
+        value = context.get(left.strip())
+
+        if value is None:
+            return False
+
+        try:
+            return float(value) > float(
+                right.strip()
+            )
+
+        except (TypeError, ValueError):
+            raise ValueError(
+                f"Condition values must be numeric: "
+                f"{condition}"
+            )
+
+    # -----------------------------------------
+    # Less than
+    # -----------------------------------------
+
+    if "<" in condition:
+
+        left, right = condition.split(
+            "<",
+            1,
+        )
+
+        value = context.get(left.strip())
+
+        if value is None:
+            return False
+
+        try:
+            return float(value) < float(
+                right.strip()
+            )
+
+        except (TypeError, ValueError):
+            raise ValueError(
+                f"Condition values must be numeric: "
+                f"{condition}"
+            )
+
+    # -----------------------------------------
+    # Equals
+    # -----------------------------------------
+
+    if "==" in condition:
+
+        left, right = condition.split(
+            "==",
+            1,
+        )
+
+        value = context.get(left.strip())
+
+        expected = right.strip().strip(
+            "\"'"
+        )
+
+        return str(value) == expected
 
     raise ValueError(
         f"Unsupported condition: {condition}"

@@ -1,5 +1,5 @@
 import typer
-from enterprise_agent_framework.config import (
+from config import (
     AGENTS_DIR,
     TOOLS_DIR,
     WORKFLOWS_DIR,
@@ -21,7 +21,7 @@ from workflows.workflow_crud import (
 from workflows.workflow_execution import (
     execute_workflow,
 )
-from enterprise_agent_framework.cli.ui import (
+from cli.ui import (
     error,
     menu,
 )

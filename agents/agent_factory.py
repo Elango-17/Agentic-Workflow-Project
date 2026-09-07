@@ -1,6 +1,6 @@
 import yaml
 
-from enterprise_agent_framework.llm.gateway import LLMGateway
+from src.llm.gateway import LLMGateway
 from agents.agent import AgentSpec
 
 
@@ -36,14 +36,20 @@ The JSON must contain exactly:
         "expected_output": ""
     },
     "llm_configuration": {
-        "model": "gpt-4o",
-        "temperature": 0.7,
+        "model": "gemini",
+        "temperature": 0.1,
         "top_p": 0.9,
-        "max_iteration": 10,
+        "max_iteration": 30,
         "max_rpm": 60,
-        "max_execution_time": 120
+        "max_execution_time": 500
     },
-    "tools": []
+    "tools": [],
+    "agent_skills": [],
+    "kb": [],
+    "guardrails": [],
+    "prompt": [],
+    "input_format": [],
+    "output_format": []
 }
 
 Rules:
@@ -58,6 +64,26 @@ Rules:
 8. Define the expected output.
 9. Do not invent tools unless explicitly requested.
 10. tools should initially be [].
+11. Populate agent_skills with the skills required by the agent.
+12. kb should initially be [].
+13. Populate prompt as a list of arrays.
+    Each prompt must be represented as its own array containing
+    one or more prompt instruction strings.
+
+    Correct:
+    "prompt": [
+        ["Fetch user stories from Jira."],
+        ["Validate that each story contains an ID and summary."]
+    ]
+
+    Incorrect:
+    "prompt": [
+        "Fetch user stories from Jira.",
+        "Validate that each story contains an ID and summary."
+    ]
+14. Populate input_file with the types of files the agent expects as input.
+15. Populate input_data with the expected input structure.
+16. Populate output_data with the expected output structure.
 """
 
 

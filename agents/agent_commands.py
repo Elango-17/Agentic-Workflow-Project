@@ -11,17 +11,17 @@ from agents.agent_execution import (
     execute_agent,
 )
 from tools.tool_registry import ToolRegistry
-from enterprise_agent_framework.config import (
+from config import (
     AGENTS_DIR,
     TOOLS_DIR,
 )
-from enterprise_agent_framework.llm.gateway import (
+from llm.gateway import (
     LLMGateway,
 )
-from enterprise_agent_framework.runtime.crew_runtime import (
+from runtime.crew_runtime import (
     CrewRuntime,
 )
-from enterprise_agent_framework.cli.ui import (
+from cli.ui import (
     error,
     menu,
 )
@@ -74,11 +74,13 @@ def agent_menu():
                 create_agent(
                     factory,
                     agent_registry,
+                    tool_registry
                 )
 
             elif choice == "2":
                 edit_agent(
-                    agent_registry
+                    agent_registry,
+                    tool_registry
                 )
 
             elif choice == "3":

@@ -12,7 +12,7 @@ from workflows.workflow_runtime import (
     WorkflowRuntime,
 )
 
-from enterprise_agent_framework.cli.ui import (
+from cli.ui import (
     info,
     success,
 )

@@ -1,6 +1,6 @@
 import typer
 
-from enterprise_agent_framework.config import (
+from config import (
     TOOLS_DIR,
     TOOL_DEFINITIONS_DIR,
     TOOL_IMPLEMENTATIONS_DIR,
@@ -20,11 +20,11 @@ from tools.tool_execution import (
     execute_tool,
 )
 
-from enterprise_agent_framework.llm.gateway import (
+from llm.gateway import (
     LLMGateway,
 )
 
-from enterprise_agent_framework.cli.ui import (
+from cli.ui import (
     error,
     menu,
 )

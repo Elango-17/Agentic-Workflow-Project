@@ -1,4 +1,4 @@
-from enterprise_agent_framework.llm.gateway import LLMGateway
+from llm.gateway import LLMGateway
 from tools.tool import ToolSpec
 import yaml
 

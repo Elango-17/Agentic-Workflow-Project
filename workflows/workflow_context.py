@@ -26,6 +26,16 @@ class WorkflowContext:
 
         self.outputs[step_id] = output
 
+        # -----------------------------------------
+        # Expose structured output as variables
+        # -----------------------------------------
+
+        if isinstance(output, dict):
+
+            for key, value in output.items():
+
+                self.variables[key] = value
+
     def get_output(
         self,
         step_id: str,

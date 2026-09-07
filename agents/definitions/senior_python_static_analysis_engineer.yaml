@@ -33,4 +33,4 @@ llm_configuration:
   max_rpm: 60
   max_execution_time: 120
 tools:
-  - repository_ast_analyzer
+  - fetch_pull_requests_from_github

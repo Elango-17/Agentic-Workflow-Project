@@ -1,8 +1,22 @@
 import typer
+
+#selection modules
+from src.llm.llm_configuration import (
+    select_llm_provider,
+    get_model_for_provider,
+)
+from tools.tool_selection import (
+    select_tools,
+    select_tools_for_edit,
+)
+from kb.kb_selection import select_kbs
+from guardrails.guardrail_selection import select_guardrails
+
+from tools.tool_registry import ToolRegistry
 from agents.agent_factory import AgentFactory
 from agents.agent_registry import AgentRegistry
-from enterprise_agent_framework.utils.editor import open_in_editor
-from enterprise_agent_framework.cli.ui import (
+from utils.editor import open_in_editor
+from cli.ui import (
     info,
     success,
 )
@@ -11,6 +25,7 @@ from enterprise_agent_framework.cli.ui import (
 def create_agent(
     factory: AgentFactory,
     registry: AgentRegistry,
+    tool_registry: ToolRegistry
 ):
     requirement = typer.prompt(
         "Describe what the agent should do"
@@ -25,6 +40,29 @@ def create_agent(
     spec = factory.generate(
         requirement
     )
+
+    # LLM
+    provider = select_llm_provider()
+    model = get_model_for_provider(
+        provider
+    )
+    # Apply LLM configuration
+    spec.llm_configuration.provider = provider
+    spec.llm_configuration.model = model
+
+    # Tools
+    selected_tools = select_tools(tool_registry)
+    spec.tools = selected_tools
+
+    # Knowledge Base
+    selected_kbs = select_kbs()
+    spec.kb = selected_kbs
+
+    # Guardrails
+    selected_guardrails = select_guardrails()
+    spec.guardrails = selected_guardrails
+
+
     path = registry.save(
         spec
     )
@@ -88,22 +126,52 @@ def select_agent(
 
 def edit_agent(
     registry: AgentRegistry,
+    tool_registry: ToolRegistry,
 ):
     agent = select_agent(
         registry
     )
     if agent is None:
         return
-    path = registry.path_for(
-        agent.id
+
+    # LLM
+    provider = select_llm_provider()
+    model = get_model_for_provider(
+        provider
     )
+
+    agent.llm_configuration.provider = provider
+    agent.llm_configuration.model = model
+
+    # Tools
+    selected_tools = select_tools_for_edit(
+        tool_registry,
+        current_tools=agent.tools,
+    )
+    agent.tools = selected_tools
+
+    # Knowledge Base
+    selected_kbs = select_kbs()
+    agent.kb = selected_kbs
+
+    # Guardrails
+    selected_guardrails = select_guardrails()
+    agent.guardrails = selected_guardrails
+
+    path = registry.save(
+        agent
+    )
+    success(
+        f"Agent updated: {path}"
+    )
+
     if open_in_editor(path):
         info(
             "Agent file opened in editor."
         )
     else:
         info(
-            f"File: {path}"
+            f"Edit manually: {path}"
         )
 
 def delete_agent(

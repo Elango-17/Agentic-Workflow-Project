@@ -1,0 +1,41 @@
+id: orchestraion_workflow
+name: Orchestraion Workflow
+description: Demo Orchestration Workflow
+practice_area: Testing
+good_at: generation, validation
+
+agents:
+  - requirement_analyzer_v1
+  - test_case_generator_v1
+  - test_case_reviewer_v2
+
+execution:
+  type: graph
+
+  steps:
+
+    - id: step_1
+      type: agent
+      agent: requirement_analyzer_v1
+      next: step_2
+
+    - id: step_2
+      type: agent
+      agent: test_case_generator_v1
+      next: step_3
+
+    - id: step_3
+      type: agent
+      agent: test_case_reviewer_v2
+      next: step_4
+
+    - id: step_4
+      type: condition
+      condition: quality_score >= 70
+      if_true: end
+      if_false: step_2
+
+    - id: end
+      type: agent
+      agent: test_case_reviewer_v2
+      next: null

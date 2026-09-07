@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 
 from crewai import Crew, Process, Task
@@ -6,8 +7,13 @@ from agents.agent_registry import AgentRegistry
 from tools.tool_registry import ToolRegistry
 
 from workflows.workflow_registry import WorkflowRegistry
+from workflows.workflow_context import WorkflowContext
+from workflows.workflow_steps import WorkflowStepExecutor
+from workflows.workflow_execution_log import (
+    WorkflowExecutionLogger,
+)
 
-from enterprise_agent_framework.runtime.crew_runtime import (
+from runtime.crew_runtime import (
     CrewRuntime,
 )
 
@@ -29,20 +35,158 @@ class WorkflowRuntime:
             tool_registry,
         )
 
+        self.step_executor = WorkflowStepExecutor(
+            self.crew_runtime
+        )
+
+        # Logger is created per workflow execution
+        self.logger = None
+
+    # =========================================================
+    # MAIN EXECUTION
+    # =========================================================
     def execute(
         self,
         workflow_id: str,
         user_input: str,
     ) -> Any:
 
+        if not user_input.strip():
+
+            raise ValueError(
+                "Workflow input cannot be empty."
+            )
+
         workflow = self.workflow_registry.get(
             workflow_id
         )
 
-        if not user_input.strip():
-            raise ValueError(
-                "Workflow input cannot be empty."
+        # -----------------------------------------------------
+        # Create logger for this workflow execution
+        # -----------------------------------------------------
+
+        logger = WorkflowExecutionLogger(
+            workflow_id
+        )
+
+        self.logger = logger
+
+        logger.start_capture()
+
+        try:
+
+            # -------------------------------------------------
+            # Execution Started
+            # -------------------------------------------------
+
+            print("\n" + "=" * 70)
+            print("WORKFLOW EXECUTION STARTED")
+            print("=" * 70)
+
+            print(
+                f"Workflow ID : {workflow_id}"
             )
+
+            print(
+                f"Workflow    : {workflow.name}"
+            )
+
+            print(
+                f"Execution Type : "
+                f"{workflow.execution.type if workflow.execution else 'sequential'}"
+            )
+
+            print("=" * 70)
+
+            # -------------------------------------------------
+            # Execute Workflow
+            # -------------------------------------------------
+
+            if (
+                workflow.execution is not None
+                and workflow.execution.type == "graph"
+            ):
+
+                result = self._execute_graph(
+                    workflow,
+                    user_input,
+                )
+
+            else:
+
+                result = self._execute_sequential(
+                    workflow,
+                    user_input,
+                )
+
+            # -------------------------------------------------
+            # Workflow Completed
+            # -------------------------------------------------
+
+            print("\n" + "=" * 70)
+            print("WORKFLOW EXECUTION COMPLETED")
+            print("=" * 70)
+
+            print(
+                f"Completed At : "
+                f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            )
+
+            print("Final Result:")
+            print(result)
+
+            print("=" * 70)
+
+            print(
+                f"Log File: {logger.path}"
+            )
+
+            return result
+
+        # -----------------------------------------------------
+        # Workflow Failed
+        # -----------------------------------------------------
+
+        except Exception as exc:
+
+            print("\n" + "=" * 70)
+            print("WORKFLOW EXECUTION FAILED")
+            print("=" * 70)
+
+            print(
+                f"Error Type : {type(exc).__name__}"
+            )
+
+            print(
+                f"Error      : {exc}"
+            )
+
+            print(
+                f"Failed At  : "
+                f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            )
+
+            print("=" * 70)
+
+            raise
+
+        # -----------------------------------------------------
+        # Always stop log capture
+        # -----------------------------------------------------
+
+        finally:
+
+            logger.stop_capture()
+
+    # =========================================================
+    # SEQUENTIAL EXECUTION
+    # =========================================================
+
+    def _execute_sequential(
+        self,
+        workflow,
+        user_input: str,
+    ) -> Any:
 
         agents = []
         tasks = []
@@ -55,7 +199,9 @@ class WorkflowRuntime:
                 agent_id
             )
 
-            agents.append(agent)
+            agents.append(
+                agent
+            )
 
             task = self._build_task(
                 workflow,
@@ -66,12 +212,366 @@ class WorkflowRuntime:
                 tasks,
             )
 
-            tasks.append(task)
+            tasks.append(
+                task
+            )
 
-        return self._execute_crew(
+        self._log(
+            "\n"
+            + "=" * 70
+        )
+
+        self._log(
+            "SEQUENTIAL CREW EXECUTION"
+        )
+
+        self._log(
+            "=" * 70
+        )
+
+        self._log(
+            f"Agents: {workflow.agents}"
+        )
+
+        result = self._execute_crew(
             agents,
             tasks,
         )
+
+        return result
+
+    # =========================================================
+    # GRAPH EXECUTION
+    # =========================================================
+
+    def _execute_graph(
+        self,
+        workflow,
+        user_input: str,
+    ) -> Any:
+
+        execution = workflow.execution
+
+        if execution is None:
+
+            raise ValueError(
+                "Workflow execution configuration "
+                "is missing."
+            )
+
+        if not execution.steps:
+
+            raise ValueError(
+                f"Graph workflow '{workflow.name}' "
+                "does not contain any steps."
+            )
+
+        # -----------------------------------------------------
+        # Create step lookup
+        # -----------------------------------------------------
+
+        steps = {
+            step.id: step
+            for step in execution.steps
+        }
+
+        # -----------------------------------------------------
+        # Validate duplicate IDs
+        # -----------------------------------------------------
+
+        if len(steps) != len(
+            execution.steps
+        ):
+
+            raise ValueError(
+                "Workflow contains duplicate step IDs."
+            )
+
+        # -----------------------------------------------------
+        # Validate references
+        # -----------------------------------------------------
+
+        self._validate_graph(
+            execution.steps,
+            steps,
+        )
+
+        # -----------------------------------------------------
+        # Starting step
+        # -----------------------------------------------------
+
+        current_step = execution.steps[0]
+
+        context = WorkflowContext(
+            user_input
+        )
+
+        result = None
+
+        # -----------------------------------------------------
+        # Safety limit
+        # -----------------------------------------------------
+
+        max_step_executions = 100
+
+        step_count = 0
+
+        self._log(
+            "\n"
+            + "=" * 70
+        )
+
+        self._log(
+            "GRAPH / ORCHESTRATION EXECUTION"
+        )
+
+        self._log(
+            "=" * 70
+        )
+
+        self._log(
+            f"Starting Step : {current_step.id}"
+        )
+
+        # -----------------------------------------------------
+        # Execute graph
+        # -----------------------------------------------------
+
+        while current_step is not None:
+
+            step_count += 1
+
+            if step_count > max_step_executions:
+
+                raise RuntimeError(
+                    "Workflow exceeded the maximum "
+                    "number of step executions. "
+                    "Possible infinite loop."
+                )
+
+            # -------------------------------------------------
+            # Execute current step
+            # -------------------------------------------------
+
+            result = self.step_executor.execute(
+                current_step,
+                context,
+            )
+
+            # -------------------------------------------------
+            # Determine next step
+            # -------------------------------------------------
+
+            next_step_id = self._get_next_step(
+                current_step,
+                result,
+            )
+
+            # -------------------------------------------------
+            # Log execution
+            # -------------------------------------------------
+
+            self._log_step(
+                current_step,
+                result,
+                next_step_id,
+                step_count,
+            )
+
+            # -------------------------------------------------
+            # Workflow completed
+            # -------------------------------------------------
+
+            if next_step_id is None:
+
+                break
+
+            # -------------------------------------------------
+            # Validate next step
+            # -------------------------------------------------
+
+            if next_step_id not in steps:
+
+                raise ValueError(
+                    f"Workflow step "
+                    f"'{current_step.id}' references "
+                    f"unknown step "
+                    f"'{next_step_id}'."
+                )
+
+            current_step = steps[
+                next_step_id
+            ]
+
+        self._log(
+            "\n"
+            + "=" * 70
+        )
+
+        self._log(
+            "GRAPH EXECUTION FINISHED"
+        )
+
+        self._log(
+            f"Total Step Executions: "
+            f"{step_count}"
+        )
+
+        self._log(
+            "=" * 70
+        )
+
+        return result
+
+    # =========================================================
+    # GRAPH VALIDATION
+    # =========================================================
+
+    def _validate_graph(
+        self,
+        steps,
+        step_lookup,
+    ) -> None:
+
+        for step in steps:
+
+            # -------------------------------------------------
+            # Agent
+            # -------------------------------------------------
+
+            if step.type == "agent":
+
+                if not step.agent:
+
+                    raise ValueError(
+                        f"Agent step '{step.id}' "
+                        "must define an agent."
+                    )
+
+                available_agents = self.agent_registry.list_agents()
+
+                available_agent_ids = [
+                    agent.id
+                    for agent in available_agents
+                ]
+
+                if step.agent not in available_agent_ids:
+
+                    raise ValueError(
+                        f"Step '{step.id}' references "
+                        f"unknown agent "
+                        f"'{step.agent}'."
+                    )
+
+            # -------------------------------------------------
+            # Condition
+            # -------------------------------------------------
+
+            elif step.type == "condition":
+
+                if not step.condition:
+
+                    raise ValueError(
+                        f"Condition step "
+                        f"'{step.id}' "
+                        "must define a condition."
+                    )
+
+                if not step.if_false:
+
+                    raise ValueError(
+                        f"Condition step "
+                        f"'{step.id}' "
+                        "must define if_false."
+                    )
+
+            # -------------------------------------------------
+            # Loop
+            # -------------------------------------------------
+
+            elif step.type == "loop":
+
+                if not step.max_iterations:
+
+                    raise ValueError(
+                        f"Loop step "
+                        f"'{step.id}' "
+                        "must define max_iterations."
+                    )
+
+            # -------------------------------------------------
+            # Validate next
+            # -------------------------------------------------
+
+            if step.next:
+
+                if step.next not in step_lookup:
+
+                    raise ValueError(
+                        f"Step '{step.id}' "
+                        f"references unknown next "
+                        f"step '{step.next}'."
+                    )
+
+            # -------------------------------------------------
+            # Validate condition branches
+            # -------------------------------------------------
+
+            if step.type == "condition":
+
+                if (
+                    step.if_true is not None
+                    and step.if_true not in step_lookup
+                ):
+
+                    raise ValueError(
+                        f"Condition step "
+                        f"'{step.id}' "
+                        f"references unknown "
+                        f"if_true step "
+                        f"'{step.if_true}'."
+                    )
+
+                if (
+                    step.if_false is not None
+                    and step.if_false not in step_lookup
+                ):
+
+                    raise ValueError(
+                        f"Condition step "
+                        f"'{step.id}' "
+                        f"references unknown "
+                        f"if_false step "
+                        f"'{step.if_false}'."
+                    )
+
+    # =========================================================
+    # DETERMINE NEXT STEP
+    # =========================================================
+
+    def _get_next_step(
+        self,
+        step,
+        result,
+    ) -> str | None:
+
+        # -----------------------------------------------------
+        # Condition
+        # -----------------------------------------------------
+
+        if step.type == "condition":
+
+            return result
+
+        # -----------------------------------------------------
+        # Agent / Loop
+        # -----------------------------------------------------
+
+        return step.next
+
+    # =========================================================
+    # BUILD LEGACY SEQUENTIAL TASK
+    # =========================================================
 
     def _build_task(
         self,
@@ -99,7 +599,8 @@ class WorkflowRuntime:
         if index == 0:
 
             description += (
-                "Analyze the following workflow input:\n\n"
+                "Analyze the following "
+                "workflow input:\n\n"
                 f"{user_input}"
             )
 
@@ -122,6 +623,163 @@ class WorkflowRuntime:
             agent=agent,
             context=context,
         )
+
+    # =========================================================
+    # STEP LOGGER
+    # =========================================================
+
+    def _log_step(
+        self,
+        step,
+        result=None,
+        next_step_id=None,
+        step_count=None,
+    ):
+
+        timestamp = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
+
+        self._log(
+            "\n"
+            + "=" * 70
+        )
+
+        self._log(
+            f"[{timestamp}] WORKFLOW STEP"
+        )
+
+        self._log(
+            "=" * 70
+        )
+
+        self._log(
+            f"Execution Count : {step_count}"
+        )
+
+        self._log(
+            f"Step ID         : {step.id}"
+        )
+
+        self._log(
+            f"Step Type       : {step.type}"
+        )
+
+        # -----------------------------------------------------
+        # Agent
+        # -----------------------------------------------------
+
+        if step.type == "agent":
+
+            self._log(
+                f"Agent           : "
+                f"{step.agent}"
+            )
+
+        # -----------------------------------------------------
+        # Condition
+        # -----------------------------------------------------
+
+        if step.type == "condition":
+
+            self._log(
+                f"Condition       : "
+                f"{step.condition}"
+            )
+
+            self._log(
+                f"If TRUE         : "
+                f"{step.if_true}"
+            )
+
+            self._log(
+                f"If FALSE        : "
+                f"{step.if_false}"
+            )
+
+        # -----------------------------------------------------
+        # Loop
+        # -----------------------------------------------------
+
+        if step.type == "loop":
+
+            self._log(
+                f"Max Iterations  : "
+                f"{step.max_iterations}"
+            )
+
+        self._log(
+            "-" * 70
+        )
+
+        # -----------------------------------------------------
+        # Result
+        # -----------------------------------------------------
+
+        if result is not None:
+
+            self._log(
+                "Result:"
+            )
+
+            self._log(
+                str(result)
+            )
+
+        else:
+
+            self._log(
+                "Result: None"
+            )
+
+        self._log(
+            "-" * 70
+        )
+
+        # -----------------------------------------------------
+        # Next Step
+        # -----------------------------------------------------
+
+        if next_step_id:
+
+            self._log(
+                f"Next Step       : "
+                f"{next_step_id}"
+            )
+
+        else:
+
+            self._log(
+                "Next Step       : "
+                "WORKFLOW COMPLETED"
+            )
+
+        self._log(
+            "=" * 70
+        )
+
+    # =========================================================
+    # LOGGER HELPER
+    # =========================================================
+
+    def _log(
+        self,
+        message: str,
+    ) -> None:
+
+        if self.logger is not None:
+
+            self.logger.log(
+                message
+            )
+
+        else:
+
+            print(message)
+
+    # =========================================================
+    # CREW EXECUTION
+    # =========================================================
 
     def _execute_crew(
         self,

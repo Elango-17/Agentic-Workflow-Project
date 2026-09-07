@@ -1,0 +1,255 @@
+
+======================================================================
+WORKFLOW EXECUTION STARTED
+======================================================================
+Workflow ID : ast_extractor_workflow
+Workflow    : AST Extractor Workflow
+Execution Type : sequential
+======================================================================
+
+======================================================================
+SEQUENTIAL CREW EXECUTION
+======================================================================
+Agents: ['senior_python_static_analysis_engineer', 'senior_python_code_quality_and_security_engineer', 'code_review_lead_agent']
+ ✨ Update Available ✨ 
+                                                                                                                                         
+  A new version of CrewAI is available!                                                                                                  
+                                                                                                                                         
+  Current version: 1.15.18                                                                                                               
+  Latest version:  1.15.20                                                                                                               
+                                                                                                                                         
+  To update, run: uv sync --upgrade-package crewai                                                                                       
+                                                                                                                                         
+
+
+ 🚀 Crew Execution Started 
+                                                                                                                                         
+  Crew Execution Started                                                                                                                 
+  Name: crew                                                                                                                             
+  ID: 61ec8e04-27a4-4225-a34e-f6d9fb6eb79a                                                                                               
+                                                                                                                                         
+                                                                                                                                         
+
+
+ 📋 Task Started 
+                                                                                                                                         
+  Task Started                                                                                                                           
+  Name: Receive Python source code, parse it into an Abstract Syntax Tree (AST), and systematically inspect it for imports, modules,     
+  classes, functions, methods, parameters, return statements, variables, loops, conditional statements, exception handling, function     
+  calls, class inheritance, decorators, global variables, nested functions, complexity indicators, and potentially dangerous             
+  operations. For each finding, document the Finding ID, Category, Location, AST Node Type, Description, Evidence, and Severity. Do not  
+  modify the source code.                                                                                                                
+                                                                                                                                         
+  Workflow: AST Extractor Workflow                                                                                                       
+  Workflow Description: This workflow will help to extract AST structure of the repo                                                     
+                                                                                                                                         
+  Practice Area: Quality Engineer                                                                                                        
+                                                                                                                                         
+  Analyze the following workflow input:                                                                                                  
+                                                                                                                                         
+  {  "repo_owner": "Elango-17",  "repo_name": "My-Shuttle-Project",  "max_prs": 3,  "state": "open"}                                     
+  ID: 504aa8fc-cf73-4a52-bfa0-c98cd77072d3                                                                                               
+                                                                                                                                         
+                                                                                                                                         
+
+
+ 🤖 Agent Started 
+                                                                                                                                         
+  Agent: Senior Python Static Analysis Engineer                                                                                          
+                                                                                                                                         
+  Task: Receive Python source code, parse it into an Abstract Syntax Tree (AST), and systematically inspect it for imports, modules,     
+  classes, functions, methods, parameters, return statements, variables, loops, conditional statements, exception handling, function     
+  calls, class inheritance, decorators, global variables, nested functions, complexity indicators, and potentially dangerous             
+  operations. For each finding, document the Finding ID, Category, Location, AST Node Type, Description, Evidence, and Severity. Do not  
+  modify the source code.                                                                                                                
+                                                                                                                                         
+  Workflow: AST Extractor Workflow                                                                                                       
+  Workflow Description: This workflow will help to extract AST structure of the repo                                                     
+                                                                                                                                         
+  Practice Area: Quality Engineer                                                                                                        
+                                                                                                                                         
+  Analyze the following workflow input:                                                                                                  
+                                                                                                                                         
+  {  "repo_owner": "Elango-17",  "repo_name": "My-Shuttle-Project",  "max_prs": 3,  "state": "open"}                                     
+                                                                                                                                         
+
+
+Tool repository_ast_analyzer executed with result: Error executing tool: Local repository path does not exist: Elango-17/My-Shuttle-Project... 🔧 Tool Execution Started (#2) 
+                                                                                                                                         
+  Tool: repository_ast_analyzer                                                                                                          
+  Args: {'branch_name': 'main', 'max_files': 10, 'repository_path': 'Elango-17/My-Shuttle-Project', 'include_paths': '.'}                
+                                                                                                                                         
+                                                                                                                                         
+
+
+
+ 🔧 Tool Error (#2) 
+                                                                                                                                         
+  Tool Failed                                                                                                                            
+  Tool: repository_ast_analyzer                                                                                                          
+  Iteration: 2                                                                                                                           
+  Attempt: 0                                                                                                                             
+  Error: Local repository path does not exist: Elango-17/My-Shuttle-Project                                                              
+                                                                                                                                         
+                                                                                                                                         
+
+
+[Finalize] todos_count=0, todos_with_results=0
+ ✅ Agent Final Answer 
+                                                                                                                                         
+  Agent: Senior Python Static Analysis Engineer                                                                                          
+                                                                                                                                         
+  Final Answer:                                                                                                                          
+  As a Senior Python Static Analysis Engineer, I have attempted to initialize the AST analysis on the provided repository                
+  `Elango-17/My-Shuttle-Project`.                                                                                                        
+                                                                                                                                         
+  ### Analysis Status: **Failed**                                                                                                        
+                                                                                                                                         
+  **Reasoning:** The `repository_ast_analyzer` tool requires a local file system path or a pre-cloned directory to perform AST parsing.  
+  The provided input, `Elango-17/My-Shuttle-Project`, refers to a remote GitHub repository path, which cannot be accessed directly by    
+  the tool in its current configuration.                                                                                                 
+                                                                                                                                         
+  ### Recommended Next Steps for Workflow Execution:                                                                                     
+                                                                                                                                         
+  To proceed with the requested structural integrity and security analysis, please ensure the repository is available in the local       
+  environment where the analysis tool is operating. Once the repository is cloned locally, provide the absolute path to the directory.   
+                                                                                                                                         
+  If you are able to provide a local path (e.g., `/home/user/projects/My-Shuttle-Project`), I can immediately execute the following      
+  diagnostic protocol:                                                                                                                   
+                                                                                                                                         
+  1.  **Structural Extraction:** Map all modules, classes, and function hierarchies.                                                     
+  2.  **Complexity Profiling:** Calculate Cyclomatic Complexity and nesting depth for all methods.                                       
+  3.  **Security Audit:** Scan for `eval()`, `exec()`, hardcoded secrets, and unsafe imports.                                            
+  4.  **Schema Formatting:** Generate the requested machine-consumable report containing:                                                
+      *   **Finding ID**                                                                                                                 
+      *   **Category** (e.g., Security, Performance, Maintainability)                                                                    
+      *   **Location** (File:Line:Column)                                                                                                
+      *   **AST Node Type**                                                                                                              
+      *   **Description & Evidence**                                                                                                     
+      *   **Severity** (Critical, High, Medium, Low, Info)                                                                               
+                                                                                                                                         
+  **Please provide the local file system path to the repository to begin the analysis.**                                                 
+                                                                                                                                         
+
+
+ 📋 Task Completion 
+                                                                                                                                         
+  Task Completed                                                                                                                         
+  Name: Receive Python source code, parse it into an Abstract Syntax Tree (AST), and systematically inspect it for imports, modules,     
+  classes, functions, methods, parameters, return statements, variables, loops, conditional statements, exception handling, function     
+  calls, class inheritance, decorators, global variables, nested functions, complexity indicators, and potentially dangerous             
+  operations. For each finding, document the Finding ID, Category, Location, AST Node Type, Description, Evidence, and Severity. Do not  
+  modify the source code.                                                                                                                
+                                                                                                                                         
+  Workflow: AST Extractor Workflow                                                                                                       
+  Workflow Description: This workflow will help to extract AST structure of the repo                                                     
+                                                                                                                                         
+  Practice Area: Quality Engineer                                                                                                        
+                                                                                                                                         
+  Analyze the following workflow input:                                                                                                  
+                                                                                                                                         
+  {  "repo_owner": "Elango-17",  "repo_name": "My-Shuttle-Project",  "max_prs": 3,  "state": "open"}                                     
+  Agent: Senior Python Static Analysis Engineer                                                                                          
+                                                                                                                                         
+                                                                                                                                         
+
+
+ 📋 Task Started 
+                                                                                                                                         
+  Task Started                                                                                                                           
+  Name: Receive the original Python source code and AST analysis. Use the AST analysis as a starting point and independently validate    
+  important findings. Analyze the code for code quality (cyclomatic complexity, large functions/classes, excessive nesting, duplicate    
+  logic, poor naming, unused elements, excessive parameters, missing error handling), security (eval, exec, subprocess, os.system,       
+  unsafe deserialization, hardcoded secrets, SQL/command injection, unsafe file operations, weak crypto), and maintainability (tight     
+  coupling, poor separation of concerns, global state, circular dependencies, untestable code). For every finding, provide Finding ID,   
+  Category, Severity, Confidence, Location, Evidence, Reason, Potential Impact, and Recommendation.                                      
+                                                                                                                                         
+  Workflow: AST Extractor Workflow                                                                                                       
+  Workflow Description: This workflow will help to extract AST structure of the repo                                                     
+                                                                                                                                         
+  Practice Area: Quality Engineer                                                                                                        
+                                                                                                                                         
+  Analyze and process the output from the previous workflow agent.                                                                       
+  ID: d7ccad1e-afb3-4505-8c3e-a3cb9143b920                                                                                               
+                                                                                                                                         
+                                                                                                                                         
+
+
+ 🤖 Agent Started 
+                                                                                                                                         
+  Agent: Senior Python Code Quality and Security Engineer                                                                                
+                                                                                                                                         
+  Task: Receive the original Python source code and AST analysis. Use the AST analysis as a starting point and independently validate    
+  important findings. Analyze the code for code quality (cyclomatic complexity, large functions/classes, excessive nesting, duplicate    
+  logic, poor naming, unused elements, excessive parameters, missing error handling), security (eval, exec, subprocess, os.system,       
+  unsafe deserialization, hardcoded secrets, SQL/command injection, unsafe file operations, weak crypto), and maintainability (tight     
+  coupling, poor separation of concerns, global state, circular dependencies, untestable code). For every finding, provide Finding ID,   
+  Category, Severity, Confidence, Location, Evidence, Reason, Potential Impact, and Recommendation.                                      
+                                                                                                                                         
+  Workflow: AST Extractor Workflow                                                                                                       
+  Workflow Description: This workflow will help to extract AST structure of the repo                                                     
+                                                                                                                                         
+  Practice Area: Quality Engineer                                                                                                        
+                                                                                                                                         
+  Analyze and process the output from the previous workflow agent.                                                                       
+                                                                                                                                         
+
+
+[Finalize] todos_count=0, todos_with_results=0
+ ✅ Agent Final Answer 
+                                                                                                                                         
+  Agent: Senior Python Code Quality and Security Engineer                                                                                
+                                                                                                                                         
+  Final Answer:                                                                                                                          
+  As a Senior Python Code Quality and Security Engineer, I acknowledge the current state of our engagement. Since the                    
+  `repository_ast_analyzer` cannot interface directly with remote GitHub URLs and requires a local filesystem path to generate the AST,  
+  **the analysis is currently blocked.**                                                                                                 
+                                                                                                                                         
+  To maintain the highest standard of professional rigor and ensure the security audit is comprehensive, I have outlined the required    
+  procedural steps below. Once the repository is cloned and the local path is provided, I will execute the following protocol.           
+                                                                                                                                         
+  ### Required Action Items                                                                                                              
+  1.  **Clone the Repository:** Please execute `git clone https://github.com/Elango-17/My-Shuttle-Project` in your local environment.    
+  2.  **Provide Path:** Provide the absolute local path to this cloned directory (e.g., `/mnt/data/my_shuttle_project`).                 
+  3.  **Environment Setup:** Ensure that any dependencies required for AST parsing (standard library `ast` and `astroid` if needed)      
+  have access to the file tree.                                                                                                          
+                                                                                                                                         
+  ---                                                                                                                                    
+                                                                                                                                         
+  ### Pending Audit Protocol                                                                                                             
+  Once the path is provided, I will initiate the following analysis pipeline to generate your report:                                    
+                                                                                                                                         
+  #### Phase 1: Structural & Complexity Analysis                                                                                         
+  *   **Cyclomatic Complexity:** Identify methods exceeding the cognitive load threshold (CC > 10).                                      
+  *   **Nesting Depth:** Flag deeply nested conditional logic (Blink/if-nesting > 3).                                                    
+  *   **Coupling/Cohesion:** Analyze import graphs for circular dependencies or God Objects.                                             
+                                                                                                                                         
+  #### Phase 2: Security & Vulnerability Scan                                                                                            
+  *   **Injection Risks:** Scan for dynamic command execution via `subprocess`, `os.system`, or f-string SQL queries.                    
+  *   **Data Integrity:** Check for `pickle.loads()` or other unsafe deserialization patterns.                                           
+  *   **Secret Exposure:** Inspect for hardcoded API keys, credentials, or tokens using pattern matching (RegEx-based entropy            
+  analysis).                                                                                                                             
+  *   **Cryptographic Weakness:** Identify deprecated hashing algorithms (e.g., MD5, SHA1 for passwords).                                
+                                                                                                                                         
+  #### Phase 3: Reporting Format                                                                                                         
+  Upon completion, you will receive a comprehensive report in the following structured schema for each identified issue:                 
+                                                                                                                                         
+  | Field | Description |                                                                                                                
+  | :--- | :--- |                                                                                                                        
+  | **Finding ID** | Unique identifier (e.g., SEC-001, QUA-001) |                                                                        
+  | **Category** | Security, Maintainability, or Code Quality |                                                                          
+  | **Severity** | Critical, High, Medium, Low, Info |                                                                                   
+  | **Confidence** | High, Medium, Low (based on static analysis precision) |                                                            
+  | **Location** | File path and Line number |                                                                                           
+  | **Evidence** | Snippet of the source code |                                                                                          
+  | **Reason** | Technical justification for the finding |                                                                               
+  | **Potential Impact** | Security risk or operational debt caused |                                                                    
+  | **Recommendation** | Actionable remediation steps |                                                                                  
+                                                                                                                                         
+  ---                                                                                                                                    
+                                                                                                                                         
+  **Please provide the absolute local path to the repository, and I will immediately commence the structural extraction and diagnostic   
+  protocol.**                                                                                                                            
+                                                                                                                                         
+
+

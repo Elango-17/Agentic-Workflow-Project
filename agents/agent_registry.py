@@ -1,7 +1,7 @@
 from pathlib import Path
 import yaml
 
-from enterprise_agent_framework.exceptions import ArtifactNotFoundError
+from exceptions import ArtifactNotFoundError
 from agents.agent import AgentSpec
 
 

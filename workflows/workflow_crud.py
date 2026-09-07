@@ -1,26 +1,38 @@
 import typer
+
 from agents.agent_registry import AgentRegistry
-from enterprise_agent_framework.config import (
-    AGENTS_DIR,
-    WORKFLOWS_DIR,
-)
-from enterprise_agent_framework.utils.editor import (
+
+from utils.editor import (
     open_in_editor,
 )
-from enterprise_agent_framework.utils.slug import (
+
+from utils.slug import (
     slugify,
 )
-from enterprise_agent_framework.cli.ui import (
+
+from cli.ui import (
     info,
     success,
 )
-from workflows.workflow import WorkflowSpec
-from workflows.workflow_registry import WorkflowRegistry
+from workflows.workflow import (
+    WorkflowSpec,
+)
+from workflows.workflow_registry import (
+    WorkflowRegistry,
+)
+from workflows.workflow_builder import (
+    WorkflowBuilder,
+)
+
 
 def create_workflow(
     agents: AgentRegistry,
     workflows: WorkflowRegistry,
 ):
+
+    # -----------------------------------------
+    # Workflow Information
+    # -----------------------------------------
 
     name = typer.prompt(
         "Workflow Name"
@@ -38,72 +50,44 @@ def create_workflow(
         "Good At"
     )
 
-    count = typer.prompt(
-        "Number of agents required",
-        type=int,
+    # -----------------------------------------
+    # Build Execution Plan
+    # -----------------------------------------
+
+    builder = WorkflowBuilder(
+        agents
     )
 
-    if count < 1:
-        raise ValueError(
-            "Number of agents must be at least 1."
-        )
+    execution = builder.build()
 
     # -----------------------------------------
-    # Get Available Agents
+    # Collect Agent IDs
     # -----------------------------------------
 
     agent_ids = []
 
-    available_agents = agents.list_agents()
-
-    if not available_agents:
-        raise ValueError(
-            "No agents found. Create at least one agent first."
-        )
-
-    typer.echo(
-        "\nAvailable Agents:"
-    )
-
-    for index, agent in enumerate(
-        available_agents,
-        start=1,
-    ):
-        typer.echo(
-            f"{index}. {agent.agent.name}"
-        )
-
-    typer.echo()
-
-    # -----------------------------------------
-    # Select Agents
-    # -----------------------------------------
-
-    for index in range(1, count + 1):
-
-        choice = typer.prompt(
-            f"{index}. Select Agent",
-            type=int,
-        )
+    for step in execution.steps:
 
         if (
-            choice < 1
-            or choice > len(available_agents)
+            step.agent
+            and step.agent not in agent_ids
         ):
-            raise ValueError(
-                "Invalid agent selection."
+            agent_ids.append(
+                step.agent
             )
 
-        selected_agent = available_agents[
-            choice - 1
-        ]
+    # -----------------------------------------
+    # Validate Agents
+    # -----------------------------------------
 
-        agent_ids.append(
-            selected_agent.id
+    if not agent_ids:
+
+        raise ValueError(
+            "Workflow must contain at least one agent."
         )
 
     # -----------------------------------------
-    # Create Workflow
+    # Create Workflow Specification
     # -----------------------------------------
 
     spec = WorkflowSpec(
@@ -113,6 +97,7 @@ def create_workflow(
         practice_area=practice_area,
         good_at=good_at,
         agents=agent_ids,
+        execution=execution,
     )
 
     # -----------------------------------------
@@ -127,6 +112,10 @@ def create_workflow(
         f"Workflow created: {path}"
     )
 
+    # -----------------------------------------
+    # Open Workflow
+    # -----------------------------------------
+
     if open_in_editor(path):
 
         info(
@@ -138,6 +127,7 @@ def create_workflow(
         info(
             f"Edit manually: {path}"
         )
+
 
 def select_workflow(
     workflows: WorkflowRegistry,
@@ -186,6 +176,7 @@ def select_workflow(
         choice - 1
     ]
 
+
 def edit_workflow(
     workflows: WorkflowRegistry,
 ):
@@ -212,6 +203,7 @@ def edit_workflow(
         info(
             f"File: {path}"
         )
+
 
 def delete_workflow(
     workflows: WorkflowRegistry,

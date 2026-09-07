@@ -1,6 +1,6 @@
 import yaml
 
-from enterprise_agent_framework.llm.gateway import LLMGateway
+from llm.gateway import LLMGateway
 from workflows.workflow import WorkflowSpec
 
 

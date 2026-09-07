@@ -1,18 +1,33 @@
 from typing import Any
+
 from workflows.workflow import WorkflowStep
+from workflows.workflow_context import WorkflowContext
+from workflows.workflow_conditions import evaluate_condition
+
+from runtime.crew_runtime import (
+    CrewRuntime,
+)
+
 
 class WorkflowStepExecutor:
+
     def __init__(
         self,
-        runtime,
+        crew_runtime: CrewRuntime,
     ):
-        self.runtime = runtime
+        self.crew_runtime = crew_runtime
 
-    def execute_step(
+    # ---------------------------------------------------------
+    # EXECUTE STEP
+    # ---------------------------------------------------------
+
+    def execute(
         self,
         step: WorkflowStep,
-        context: dict[str, Any],
+        context: WorkflowContext,
     ) -> Any:
+
+        context.current_step = step.id
 
         if step.type == "agent":
             return self._execute_agent(
@@ -21,7 +36,7 @@ class WorkflowStepExecutor:
             )
 
         if step.type == "condition":
-            return self._evaluate_condition(
+            return self._execute_condition(
                 step,
                 context,
             )
@@ -36,66 +51,123 @@ class WorkflowStepExecutor:
             f"Unsupported workflow step type: {step.type}"
         )
 
+    # ---------------------------------------------------------
+    # AGENT
+    # ---------------------------------------------------------
+
     def _execute_agent(
         self,
         step: WorkflowStep,
-        context: dict[str, Any],
+        context: WorkflowContext,
     ) -> Any:
 
         if not step.agent:
             raise ValueError(
-                f"Agent step '{step.id}' requires an agent."
+                f"Agent step '{step.id}' "
+                "must define an agent."
             )
 
-        return self.runtime.execute(
+        result = self.crew_runtime.execute(
             identifier=step.agent,
-            inputs=context,
+            inputs={
+                "user_input": context.user_input,
+                "previous_output": context.latest_output(),
+                "variables": context.variables,
+            },
         )
 
-    def _evaluate_condition(
+        context.set_output(
+            step.id,
+            result,
+        )
+
+        return result
+
+    # ---------------------------------------------------------
+    # CONDITION
+    # ---------------------------------------------------------
+
+    def _execute_condition(
         self,
         step: WorkflowStep,
-        context: dict[str, Any],
-    ) -> bool:
+        context: WorkflowContext,
+    ) -> str:
 
         if not step.condition:
             raise ValueError(
-                f"Condition step '{step.id}' requires a condition."
+                f"Condition step '{step.id}' "
+                "must define a condition."
             )
 
-        return bool(
-            context.get(
-                step.condition,
-                False,
-            )
+        condition_context = {
+            **context.variables,
+            "user_input": context.user_input,
+            "latest_output": context.latest_output(),
+        }
+
+        result = evaluate_condition(
+            step.condition,
+            condition_context,
         )
+
+        if result:
+            next_step = step.if_true
+
+        else:
+            next_step = step.if_false
+
+        context.set_output(
+            step.id,
+            result,
+        )
+
+        return next_step
+
+    # ---------------------------------------------------------
+    # LOOP
+    # ---------------------------------------------------------
 
     def _execute_loop(
         self,
         step: WorkflowStep,
-        context: dict[str, Any],
-    ) -> list[Any]:
+        context: WorkflowContext,
+    ) -> Any:
 
-        if not step.next:
+        if not step.agent:
             raise ValueError(
-                f"Loop step '{step.id}' requires a next step."
+                f"Loop step '{step.id}' "
+                "must define an agent."
             )
 
-        max_iterations = (
-            step.max_iterations or 1
-        )
+        if not step.max_iterations:
+            raise ValueError(
+                f"Loop step '{step.id}' "
+                "must define max_iterations."
+            )
 
         results = []
 
-        for _ in range(max_iterations):
+        for iteration in range(
+            step.max_iterations
+        ):
 
-            result = self.runtime.execute(
-                identifier=step.next,
-                inputs=context,
+            context.iteration = iteration + 1
+
+            result = self.crew_runtime.execute(
+                identifier=step.agent,
+                inputs={
+                    "user_input": context.user_input,
+                    "previous_output": context.latest_output(),
+                    "variables": context.variables,
+                    "iteration": context.iteration,
+                },
             )
 
             results.append(result)
 
-            context["last_result"] = result
+            context.set_output(
+                step.id,
+                result,
+            )
 
         return results
