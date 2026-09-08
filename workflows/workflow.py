@@ -63,7 +63,9 @@ class WorkflowSpec(BaseModel):
     name: str
     description: str
     practice_area: str
-    good_at: str
+    good_at: list[str] = Field(
+        default_factory=list
+    )
 
     agents: list[str] = Field(
         min_length=1

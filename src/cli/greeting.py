@@ -23,9 +23,16 @@ def get_greeting() -> str:
         return "Good Afternoon🌄"
 
     if current_hour < 21:
-            return "Good Evening🌄"
+        return "Good Evening🌄"
 
     return "Good Night🌃"
+
+
+def get_current_time() -> str:
+    """
+    Return the current local time.
+    """
+    return datetime.now().strftime("%I:%M:%S %p")
 
 
 def get_welcome_message() -> str:
@@ -35,10 +42,12 @@ def get_welcome_message() -> str:
 
     user_name = get_user_name()
     greeting = get_greeting()
+    current_time = get_current_time()
 
     return (
         "=============================================================\n"
-        f"           Hello {user_name}👾!,{greeting}\n"
+        f"           Hello {user_name}👾!, {greeting}\n"
+        f"                 Time: {current_time}\n"
         "         What would you like to do today?\n"
         "Build, manage, and execute AI agents, tools, and workflows.\n"
         "============================================================="

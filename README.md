@@ -9,16 +9,22 @@ It implements interactive creation, editing, deletion, validation, LLM-backed ge
 ```bash
 python -m venv .venv
 # Windows PowerShell: .venv\\Scripts\\Activate.ps1
-# macOS/Linux: source .venv/bin/activate
-pip install -e ".[dev,openai]"
-```
 
-For a no-API-key smoke test, put `LLM_PROVIDER=mock` in `.env`.
+# Windows PowerShell:
+.venv\Scripts\Activate.ps1
+
+# macOS/Linux:
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+pip install -e .
+```
 
 Then run:
 
 ```bash
-python -m enterprise_agent_framework.cli.main
+python main.py
 ```
 
 ## Runtime boundary
@@ -35,5 +41,3 @@ AgentSpec / WorkflowSpec / ToolSpec
               v
      CrewAI Agent / Crew / Flow
 ```
-
-Generated tools are syntax-checked but never executed automatically.

@@ -1,0 +1,562 @@
+
+======================================================================
+WORKFLOW EXECUTION STARTED
+======================================================================
+Workflow ID : demo
+Workflow    : demo
+Execution Type : graph
+======================================================================
+
+======================================================================
+GRAPH / ORCHESTRATION EXECUTION
+======================================================================
+Starting Step : step_1
+ ✨ Update Available ✨ 
+                                                                                                                                  
+  A new version of CrewAI is available!                                                                                           
+                                                                                                                                  
+  Current version: 1.15.18                                                                                                        
+  Latest version:  1.15.20                                                                                                        
+                                                                                                                                  
+  To update, run: uv sync --upgrade-package crewai                                                                                
+                                                                                                                                  
+
+
+ 🚀 Crew Execution Started 
+                                                                                                                                  
+  Crew Execution Started                                                                                                          
+  Name: crew                                                                                                                      
+  ID: 6ad02387-e812-47b7-9442-6a41205dc506                                                                                        
+                                                                                                                                  
+                                                                                                                                  
+
+
+ 📋 Task Started 
+                                                                                                                                  
+  Task Started                                                                                                                    
+  Name: Analyze the requirement analysis provided by the previous workflow step and generate test cases covering functional       
+  scenarios, positive scenarios, negative scenarios, boundary conditions, edge cases, input validation, business rules, error     
+  handling, and regression scenarios                                                                                              
+                                                                                                                                  
+  Runtime Input:                                                                                                                  
+  {'user_input': '{  "bugId": "BUG-1024",  "title": "Checkout fails when applying a discount coupon",  "description": "Users are  
+  unable to complete checkout when they apply a valid discount coupon. The discount is displayed correctly on the cart page, but  
+  clicking \\"Place Order\\" results in a 500 Internal Server Error.",  "environment": "Production",  "affectedModule":           
+  "Checkout / Payment",  "severity": "High"}', 'previous_output': None, 'variables': {}}                                          
+  ID: 937d70ce-0792-43e6-8102-60e4f23ee091                                                                                        
+                                                                                                                                  
+                                                                                                                                  
+
+
+ 🤖 Agent Started 
+                                                                                                                                  
+  Agent: Senior QA Test Case Engineer                                                                                             
+                                                                                                                                  
+  Task: Analyze the requirement analysis provided by the previous workflow step and generate test cases covering functional       
+  scenarios, positive scenarios, negative scenarios, boundary conditions, edge cases, input validation, business rules, error     
+  handling, and regression scenarios                                                                                              
+                                                                                                                                  
+  Runtime Input:                                                                                                                  
+  {'user_input': '{  "bugId": "BUG-1024",  "title": "Checkout fails when applying a discount coupon",  "description": "Users are  
+  unable to complete checkout when they apply a valid discount coupon. The discount is displayed correctly on the cart page, but  
+  clicking \\"Place Order\\" results in a 500 Internal Server Error.",  "environment": "Production",  "affectedModule":           
+  "Checkout / Payment",  "severity": "High"}', 'previous_output': None, 'variables': {}}                                          
+                                                                                                                                  
+
+
+[Finalize] todos_count=0, todos_with_results=0
+ ✅ Agent Final Answer 
+                                                                                                                                  
+  Agent: Senior QA Test Case Engineer                                                                                             
+                                                                                                                                  
+  Final Answer:                                                                                                                   
+  ### Test Case Suite: BUG-1024 (Checkout Discount Coupon Failure)                                                                
+                                                                                                                                  
+  As a Senior QA Test Case Engineer, I have analyzed the bug report (BUG-1024) where applying a valid discount coupon causes a    
+  `500 Internal Server Error` during the "Place Order" action in the Checkout / Payment module.                                   
+                                                                                                                                  
+  Below is the comprehensive, structured, and executable test case suite covering functional, positive, negative, boundary        
+  conditions, edge cases, input validation, business rules, error handling, and regression scenarios to ensure the bug is fixed   
+  and no side effects are introduced.                                                                                             
+                                                                                                                                  
+  ---                                                                                                                             
+                                                                                                                                  
+  ### Test Case Matrix                                                                                                            
+                                                                                                                                  
+  | Test Case ID | Requirement Reference | Title | Preconditions | Test Data | Test Steps | Expected Result | Test Type |         
+  Priority | Coverage Classification |                                                                                            
+  | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |                                                         
+  | **TC_CHK_001** | BUG-1024 | Verify successful checkout with a valid percentage discount coupon | • User is logged in<br>•     
+  Cart contains eligible item(s)<br>• Valid coupon exists in DB | Coupon Code: `SAVE10` (10% off) | 1. Add item to cart.<br>2.    
+  Navigate to Cart/Checkout.<br>3. Enter `SAVE10` and apply.<br>4. Proceed to payment.<br>5. Click "Place Order". | • Coupon      
+  discount is applied correctly.<br>• Order is placed successfully (200 OK).<br>• Order confirmation page is displayed. |         
+  Functional / Positive | High | Happy Path / Bug Fix Verification |                                                              
+  | **TC_CHK_002** | BUG-1024 | Verify successful checkout with a valid fixed-amount discount coupon | • User is logged in<br>•   
+  Cart total > coupon value | Coupon Code: `FLAT20` ($20 off) | 1. Add item worth $50 to cart.<br>2. Apply `FLAT20`               
+  coupon.<br>3. Fill shipping/payment details.<br>4. Click "Place Order". | • Fixed discount is deducted.<br>• Order places       
+  successfully without 500 error.<br>• Correct final amount is charged. | Functional / Positive | High | Business Rules |         
+  | **TC_CHK_003** | BUG-1024 | Verify behavior when applying an expired discount coupon | • Coupon has expired in the system |   
+  Coupon Code: `EXPIRED50` | 1. Add item to cart.<br>2. Apply `EXPIRED50` coupon.<br>3. Attempt to proceed to checkout / place    
+  order. | • System rejects the coupon with a clear error message ("Coupon has expired").<br>• Order cannot be placed with this   
+  coupon. | Negative | Medium | Input Validation / Business Rules |                                                               
+  | **TC_CHK_004** | BUG-1024 | Verify behavior when applying a non-existent/invalid coupon code | • User is on the               
+  cart/checkout page | Coupon Code: `INVALID999` | 1. Add item to cart.<br>2. Enter `INVALID999` and click Apply. | • System      
+  displays an error message ("Invalid coupon code").<br>• Cart total remains unchanged. | Negative | Medium | Input Validation |  
+  | **TC_CHK_005** | BUG-1024 | Verify boundary condition: Coupon applied on cart total exactly equal to minimum spend limit | •  
+  Minimum spend limit for coupon is $50 | Coupon Code: `MIN50` (Min spend $50)<br>Cart Total: $50.00 | 1. Add items totaling      
+  exactly $50.00 to cart.<br>2. Apply `MIN50` coupon.<br>3. Click "Place Order". | • Coupon is accepted.<br>• Checkout completes  
+  successfully with the discount applied. | Boundary Condition | High | Boundary Value Analysis |                                 
+  | **TC_CHK_006** | BUG-1024 | Verify edge case: Coupon applied when cart total falls just below the minimum spend limit | •     
+  Minimum spend limit for coupon is $50 | Coupon Code: `MIN50`<br>Cart Total: $49.99 | 1. Add items totaling $49.99 to            
+  cart.<br>2. Apply `MIN50` coupon.<br>3. Attempt checkout. | • System displays minimum spend restriction error.<br>• Discount    
+  is not applied. | Edge Case | Medium | Boundary Value Analysis |                                                                
+  | **TC_CHK_007** | BUG-1024 | Verify edge case: Coupon application resulting in a zero-dollar ($0.00) order total | • Free      
+  item promotion or 100% discount coupon available | Coupon Code: `FREE100` (100% off) | 1. Add item worth $30 to cart.<br>2.     
+  Apply `FREE100` coupon (Total becomes $0.00).<br>3. Select free payment method (if applicable) and click "Place Order". | •     
+  Order is processed successfully without requiring payment gateway interaction.<br>• Order status is set to completed/paid. |    
+  Edge Case | High | Special Business Rules |                                                                                     
+  | **TC_CHK_008** | BUG-1024 | Verify server error handling and user feedback when backend fails during "Place Order" | •        
+  Mock/Simulate backend database timeout or unexpected server exception | Valid Coupon Code: `SAVE10` | 1. Apply `SAVE10` to      
+  cart.<br>2. Trigger a simulated 500 error on the backend payment endpoint.<br>3. Click "Place Order". | • System catches the    
+  exception gracefully.<br>• User-friendly error message is displayed (e.g., "An unexpected error occurred. Please try again      
+  later.").<br>• User is not left on a blank/loading screen. | Error Handling | High | Robustness / Resilience |                  
+  | **TC_CHK_009** | BUG-1024 | Verify checkout functionality *without* any discount coupon applied (Regression) | • Clean user   
+  session | N/A | 1. Add item to cart without adding any coupon.<br>2. Proceed to checkout.<br>3. Click "Place Order". | •        
+  Standard checkout processes successfully.<br>• Ensures core checkout flow wasn't broken by the coupon bug fix. | Regression |   
+  High | Regression / Base Functionality |                                                                                        
+  | **TC_CHK_010** | BUG-1024 | Verify coupon removal functionality prior to placing order | • Coupon `SAVE10` is already         
+  applied to the cart | Coupon Code: `SAVE10` | 1. Apply `SAVE10` to cart.<br>2. Click the "Remove" / "X" button next to the      
+  coupon.<br>3. Proceed to checkout and click "Place Order". | • Coupon is successfully removed from cart.<br>• Cart total        
+  reverts to original price.<br>• Order places successfully at original price. | Functional / Positive | Medium | State           
+  Transition |                                                                                                                    
+                                                                                                                                  
+
+
+ 📋 Task Completion 
+                                                                                                                                  
+  Task Completed                                                                                                                  
+  Name: Analyze the requirement analysis provided by the previous workflow step and generate test cases covering functional       
+  scenarios, positive scenarios, negative scenarios, boundary conditions, edge cases, input validation, business rules, error     
+  handling, and regression scenarios                                                                                              
+                                                                                                                                  
+  Runtime Input:                                                                                                                  
+  {'user_input': '{  "bugId": "BUG-1024",  "title": "Checkout fails when applying a discount coupon",  "description": "Users are  
+  unable to complete checkout when they apply a valid discount coupon. The discount is displayed correctly on the cart page, but  
+  clicking \\"Place Order\\" results in a 500 Internal Server Error.",  "environment": "Production",  "affectedModule":           
+  "Checkout / Payment",  "severity": "High"}', 'previous_output': None, 'variables': {}}                                          
+  Agent: Senior QA Test Case Engineer                                                                                             
+                                                                                                                                  
+                                                                                                                                  
+
+
+
+======================================================================
+[2026-09-08 10:07:27] WORKFLOW STEP
+======================================================================
+Execution Count : 1
+Step ID         : step_1
+Step Type       : agent
+Agent           : test_case_generator_v1
+----------------------------------------------------------------------
+Result:
+### Test Case Suite: BUG-1024 (Checkout Discount Coupon Failure)
+
+As a Senior QA Test Case Engineer, I have analyzed the bug report (BUG-1024) where applying a valid discount coupon causes a `500 Internal Server Error` during the "Place Order" action in the Checkout / Payment module. 
+
+Below is the comprehensive, structured, and executable test case suite covering functional, positive, negative, boundary conditions, edge cases, input validation, business rules, error handling, and regression scenarios to ensure the bug is fixed and no side effects are introduced.
+
+---
+
+### Test Case Matrix
+
+| Test Case ID | Requirement Reference | Title | Preconditions | Test Data | Test Steps | Expected Result | Test Type | Priority | Coverage Classification |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC_CHK_001** | BUG-1024 | Verify successful checkout with a valid percentage discount coupon | • User is logged in<br>• Cart contains eligible item(s)<br>• Valid coupon exists in DB | Coupon Code: `SAVE10` (10% off) | 1. Add item to cart.<br>2. Navigate to Cart/Checkout.<br>3. Enter `SAVE10` and apply.<br>4. Proceed to payment.<br>5. Click "Place Order". | • Coupon discount is applied correctly.<br>• Order is placed successfully (200 OK).<br>• Order confirmation page is displayed. | Functional / Positive | High | Happy Path / Bug Fix Verification |
+| **TC_CHK_002** | BUG-1024 | Verify successful checkout with a valid fixed-amount discount coupon | • User is logged in<br>• Cart total > coupon value | Coupon Code: `FLAT20` ($20 off) | 1. Add item worth $50 to cart.<br>2. Apply `FLAT20` coupon.<br>3. Fill shipping/payment details.<br>4. Click "Place Order". | • Fixed discount is deducted.<br>• Order places successfully without 500 error.<br>• Correct final amount is charged. | Functional / Positive | High | Business Rules |
+| **TC_CHK_003** | BUG-1024 | Verify behavior when applying an expired discount coupon | • Coupon has expired in the system | Coupon Code: `EXPIRED50` | 1. Add item to cart.<br>2. Apply `EXPIRED50` coupon.<br>3. Attempt to proceed to checkout / place order. | • System rejects the coupon with a clear error message ("Coupon has expired").<br>• Order cannot be placed with this coupon. | Negative | Medium | Input Validation / Business Rules |
+| **TC_CHK_004** | BUG-1024 | Verify behavior when applying a non-existent/invalid coupon code | • User is on the cart/checkout page | Coupon Code: `INVALID999` | 1. Add item to cart.<br>2. Enter `INVALID999` and click Apply. | • System displays an error message ("Invalid coupon code").<br>• Cart total remains unchanged. | Negative | Medium | Input Validation |
+| **TC_CHK_005** | BUG-1024 | Verify boundary condition: Coupon applied on cart total exactly equal to minimum spend limit | • Minimum spend limit for coupon is $50 | Coupon Code: `MIN50` (Min spend $50)<br>Cart Total: $50.00 | 1. Add items totaling exactly $50.00 to cart.<br>2. Apply `MIN50` coupon.<br>3. Click "Place Order". | • Coupon is accepted.<br>• Checkout completes successfully with the discount applied. | Boundary Condition | High | Boundary Value Analysis |
+| **TC_CHK_006** | BUG-1024 | Verify edge case: Coupon applied when cart total falls just below the minimum spend limit | • Minimum spend limit for coupon is $50 | Coupon Code: `MIN50`<br>Cart Total: $49.99 | 1. Add items totaling $49.99 to cart.<br>2. Apply `MIN50` coupon.<br>3. Attempt checkout. | • System displays minimum spend restriction error.<br>• Discount is not applied. | Edge Case | Medium | Boundary Value Analysis |
+| **TC_CHK_007** | BUG-1024 | Verify edge case: Coupon application resulting in a zero-dollar ($0.00) order total | • Free item promotion or 100% discount coupon available | Coupon Code: `FREE100` (100% off) | 1. Add item worth $30 to cart.<br>2. Apply `FREE100` coupon (Total becomes $0.00).<br>3. Select free payment method (if applicable) and click "Place Order". | • Order is processed successfully without requiring payment gateway interaction.<br>• Order status is set to completed/paid. | Edge Case | High | Special Business Rules |
+| **TC_CHK_008** | BUG-1024 | Verify server error handling and user feedback when backend fails during "Place Order" | • Mock/Simulate backend database timeout or unexpected server exception | Valid Coupon Code: `SAVE10` | 1. Apply `SAVE10` to cart.<br>2. Trigger a simulated 500 error on the backend payment endpoint.<br>3. Click "Place Order". | • System catches the exception gracefully.<br>• User-friendly error message is displayed (e.g., "An unexpected error occurred. Please try again later.").<br>• User is not left on a blank/loading screen. | Error Handling | High | Robustness / Resilience |
+| **TC_CHK_009** | BUG-1024 | Verify checkout functionality *without* any discount coupon applied (Regression) | • Clean user session | N/A | 1. Add item to cart without adding any coupon.<br>2. Proceed to checkout.<br>3. Click "Place Order". | • Standard checkout processes successfully.<br>• Ensures core checkout flow wasn't broken by the coupon bug fix. | Regression | High | Regression / Base Functionality |
+| **TC_CHK_010** | BUG-1024 | Verify coupon removal functionality prior to placing order | • Coupon `SAVE10` is already applied to the cart | Coupon Code: `SAVE10` | 1. Apply `SAVE10` to cart.<br>2. Click the "Remove" / "X" button next to the coupon.<br>3. Proceed to checkout and click "Place Order". | • Coupon is successfully removed from cart.<br>• Cart total reverts to original price.<br>• Order places successfully at original price. | Functional / Positive | Medium | State Transition |
+----------------------------------------------------------------------
+Next Step       : step_2
+======================================================================
+ Crew Completion 
+                                                                                                                                  
+  Crew Execution Completed                                                                                                        
+  Name: crew                                                                                                                      
+  ID: 6ad02387-e812-47b7-9442-6a41205dc506                                                                                        
+  Final Output: ### Test Case Suite: BUG-1024 (Checkout Discount Coupon Failure)                                                  
+                                                                                                                                  
+  As a Senior QA Test Case Engineer, I have analyzed the bug report (BUG-1024) where applying a valid discount coupon causes a    
+  `500 Internal Server Error` during the "Place Order" action in the Checkout / Payment module.                                   
+                                                                                                                                  
+  Below is the comprehensive, structured, and executable test case suite covering functional, positive, negative, boundary        
+  conditions, edge cases, input validation, business rules, error handling, and regression scenarios to ensure the bug is fixed   
+  and no side effects are introduced.                                                                                             
+                                                                                                                                  
+  ---                                                                                                                             
+                                                                                                                                  
+  ### Test Case Matrix                                                                                                            
+                                                                                                                                  
+  | Test Case ID | Requirement Reference | Title | Preconditions | Test Data | Test Steps | Expected Result | Test Type |         
+  Priority | Coverage Classification |                                                                                            
+  | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |                                                         
+  | **TC_CHK_001** | BUG-1024 | Verify successful checkout with a valid percentage discount coupon | • User is logged in<br>•     
+  Cart contains eligible item(s)<br>• Valid coupon exists in DB | Coupon Code: `SAVE10` (10% off) | 1. Add item to cart.<br>2.    
+  Navigate to Cart/Checkout.<br>3. Enter `SAVE10` and apply.<br>4. Proceed to payment.<br>5. Click "Place Order". | • Coupon      
+  discount is applied correctly.<br>• Order is placed successfully (200 OK).<br>• Order confirmation page is displayed. |         
+  Functional / Positive | High | Happy Path / Bug Fix Verification |                                                              
+  | **TC_CHK_002** | BUG-1024 | Verify successful checkout with a valid fixed-amount discount coupon | • User is logged in<br>•   
+  Cart total > coupon value | Coupon Code: `FLAT20` ($20 off) | 1. Add item worth $50 to cart.<br>2. Apply `FLAT20`               
+  coupon.<br>3. Fill shipping/payment details.<br>4. Click "Place Order". | • Fixed discount is deducted.<br>• Order places       
+  successfully without 500 error.<br>• Correct final amount is charged. | Functional / Positive | High | Business Rules |         
+  | **TC_CHK_003** | BUG-1024 | Verify behavior when applying an expired discount coupon | • Coupon has expired in the system |   
+  Coupon Code: `EXPIRED50` | 1. Add item to cart.<br>2. Apply `EXPIRED50` coupon.<br>3. Attempt to proceed to checkout / place    
+  order. | • System rejects the coupon with a clear error message ("Coupon has expired").<br>• Order cannot be placed with this   
+  coupon. | Negative | Medium | Input Validation / Business Rules |                                                               
+  | **TC_CHK_004** | BUG-1024 | Verify behavior when applying a non-existent/invalid coupon code | • User is on the               
+  cart/checkout page | Coupon Code: `INVALID999` | 1. Add item to cart.<br>2. Enter `INVALID999` and click Apply. | • System      
+  displays an error message ("Invalid coupon code").<br>• Cart total remains unchanged. | Negative | Medium | Input Validation |  
+  | **TC_CHK_005** | BUG-1024 | Verify boundary condition: Coupon applied on cart total exactly equal to minimum spend limit | •  
+  Minimum spend limit for coupon is $50 | Coupon Code: `MIN50` (Min spend $50)<br>Cart Total: $50.00 | 1. Add items totaling      
+  exactly $50.00 to cart.<br>2. Apply `MIN50` coupon.<br>3. Click "Place Order". | • Coupon is accepted.<br>• Checkout completes  
+  successfully with the discount applied. | Boundary Condition | High | Boundary Value Analysis |                                 
+  | **TC_CHK_006** | BUG-1024 | Verify edge case: Coupon applied when cart total falls just below the minimum spend limit | •     
+  Minimum spend limit for coupon is $50 | Coupon Code: `MIN50`<br>Cart Total: $49.99 | 1. Add items totaling $49.99 to            
+  cart.<br>2. Apply `MIN50` coupon.<br>3. Attempt checkout. | • System displays minimum spend restriction error.<br>• Discount    
+  is not applied. | Edge Case | Medium | Boundary Value Analysis |                                                                
+  | **TC_CHK_007** | BUG-1024 | Verify edge case: Coupon application resulting in a zero-dollar ($0.00) order total | • Free      
+  item promotion or 100% discount coupon available | Coupon Code: `FREE100` (100% off) | 1. Add item worth $30 to cart.<br>2.     
+  Apply `FREE100` coupon (Total becomes $0.00).<br>3. Select free payment method (if applicable) and click "Place Order". | •     
+  Order is processed successfully without requiring payment gateway interaction.<br>• Order status is set to completed/paid. |    
+  Edge Case | High | Special Business Rules |                                                                                     
+  | **TC_CHK_008** | BUG-1024 | Verify server error handling and user feedback when backend fails during "Place Order" | •        
+  Mock/Simulate backend database timeout or unexpected server exception | Valid Coupon Code: `SAVE10` | 1. Apply `SAVE10` to      
+  cart.<br>2. Trigger a simulated 500 error on the backend payment endpoint.<br>3. Click "Place Order". | • System catches the    
+  exception gracefully.<br>• User-friendly error message is displayed (e.g., "An unexpected error occurred. Please try again      
+  later.").<br>• User is not left on a blank/loading screen. | Error Handling | High | Robustness / Resilience |                  
+  | **TC_CHK_009** | BUG-1024 | Verify checkout functionality *without* any discount coupon applied (Regression) | • Clean user   
+  session | N/A | 1. Add item to cart without adding any coupon.<br>2. Proceed to checkout.<br>3. Click "Place Order". | •        
+  Standard checkout processes successfully.<br>• Ensures core checkout flow wasn't broken by the coupon bug fix. | Regression |   
+  High | Regression / Base Functionality |                                                                                        
+  | **TC_CHK_010** | BUG-1024 | Verify coupon removal functionality prior to placing order | • Coupon `SAVE10` is already         
+  applied to the cart | Coupon Code: `SAVE10` | 1. Apply `SAVE10` to cart.<br>2. Click the "Remove" / "X" button next to the      
+  coupon.<br>3. Proceed to checkout and click "Place Order". | • Coupon is successfully removed from cart.<br>• Cart total        
+  reverts to original price.<br>• Order places successfully at original price. | Functional / Positive | Medium | State           
+  Transition |                                                                                                                    
+                                                                                                                                  
+                                                                                                                                  
+
+
+ Tracing Status 
+                                                                                                                                  
+  Info: Tracing is disabled.                                                                                                      
+                                                                                                                                  
+  To enable tracing, do any one of these:                                                                                         
+  • Set tracing=True in your Crew/Flow code                                                                                       
+  • Set CREWAI_TRACING_ENABLED=true in your project's .env file                                                                   
+  • Run: crewai traces enable                                                                                                     
+                                                                                                                                  
+
+ ✨ Update Available ✨ 
+                                                                                                                                  
+  A new version of CrewAI is available!                                                                                           
+                                                                                                                                  
+  Current version: 1.15.18                                                                                                        
+  Latest version:  1.15.20                                                                                                        
+                                                                                                                                  
+  To update, run: uv sync --upgrade-package crewai                                                                                
+                                                                                                                                  
+
+
+ 🚀 Crew Execution Started 
+                                                                                                                                  
+  Crew Execution Started                                                                                                          
+  Name: crew                                                                                                                      
+  ID: 80135adc-2177-45ef-833b-add9e036e152                                                                                        
+                                                                                                                                  
+                                                                                                                                  
+
+
+ 📋 Task Started 
+                                                                                                                                  
+  Task Started                                                                                                                    
+  Name: You are a strict QA Reviewer. Your ONLY job is to read the provided test cases and grade them. Do NOT rewrite or output   
+  the test cases.  Calculate a quality_score from 0 to 100 based on coverage, correctness, and completeness. You MUST output      
+  your ENTIRE response as a single, valid JSON object. Do not use markdown formatting.                                            
+                                                                                                                                  
+                                                                                                                                  
+  Runtime Input:                                                                                                                  
+  {'user_input': '{  "bugId": "BUG-1024",  "title": "Checkout fails when applying a discount coupon",  "description": "Users are  
+  unable to complete checkout when they apply a valid discount coupon. The discount is displayed correctly on the cart page, but  
+  clicking \\"Place Order\\" results in a 500 Internal Server Error.",  "environment": "Production",  "affectedModule":           
+  "Checkout / Payment",  "severity": "High"}', 'previous_output': '### Test Case Suite: BUG-1024 (Checkout Discount Coupon        
+  Failure)\n\nAs a Senior QA Test Case Engineer, I have analyzed the bug report (BUG-1024) where applying a valid discount        
+  coupon causes a `500 Internal Server Error` during the "Place Order" action in the Checkout / Payment module. \n\nBelow is the  
+  comprehensive, structured, and executable test case suite covering functional, positive, negative, boundary conditions, edge    
+  cases, input validation, business rules, error handling, and regression scenarios to ensure the bug is fixed and no side        
+  effects are introduced.\n\n---\n\n### Test Case Matrix\n\n| Test Case ID | Requirement Reference | Title | Preconditions |      
+  Test Data | Test Steps | Expected Result | Test Type | Priority | Coverage Classification |\n| :--- | :--- | :--- | :--- |      
+  :--- | :--- | :--- | :--- | :--- | :--- |\n| **TC_CHK_001** | BUG-1024 | Verify successful checkout with a valid percentage     
+  discount coupon | • User is logged in<br>• Cart contains eligible item(s)<br>• Valid coupon exists in DB | Coupon Code:         
+  `SAVE10` (10% off) | 1. Add item to cart.<br>2. Navigate to Cart/Checkout.<br>3. Enter `SAVE10` and apply.<br>4. Proceed to     
+  payment.<br>5. Click "Place Order". | • Coupon discount is applied correctly.<br>• Order is placed successfully (200 OK).<br>•  
+  Order confirmation page is displayed. | Functional / Positive | High | Happy Path / Bug Fix Verification |\n| **TC_CHK_002** |  
+  BUG-1024 | Verify successful checkout with a valid fixed-amount discount coupon | • User is logged in<br>• Cart total > coupon  
+  value | Coupon Code: `FLAT20` ($20 off) | 1. Add item worth $50 to cart.<br>2. Apply `FLAT20` coupon.<br>3. Fill                
+  shipping/payment details.<br>4. Click "Place Order". | • Fixed discount is deducted.<br>• Order places successfully without     
+  500 error.<br>• Correct final amount is charged. | Functional / Positive | High | Business Rules |\n| **TC_CHK_003** |          
+  BUG-1024 | Verify behavior when applying an expired discount coupon | • Coupon has expired in the system | Coupon Code:         
+  `EXPIRED50` | 1. Add item to cart.<br>2. Apply `EXPIRED50` coupon.<br>3. Attempt to proceed to checkout / place order. | •      
+  System rejects the coupon with a clear error message ("Coupon has expired").<br>• Order cannot be placed with this coupon. |    
+  Negative | Medium | Input Validation / Business Rules |\n| **TC_CHK_004** | BUG-1024 | Verify behavior when applying a          
+  non-existent/invalid coupon code | • User is on the cart/checkout page | Coupon Code: `INVALID999` | 1. Add item to             
+  cart.<br>2. Enter `INVALID999` and click Apply. | • System displays an error message ("Invalid coupon code").<br>• Cart total   
+  remains unchanged. | Negative | Medium | Input Validation |\n| **TC_CHK_005** | BUG-1024 | Verify boundary condition: Coupon    
+  applied on cart total exactly equal to minimum spend limit | • Minimum spend limit for coupon is $50 | Coupon Code: `MIN50`     
+  (Min spend $50)<br>Cart Total: $50.00 | 1. Add items totaling exactly $50.00 to cart.<br>2. Apply `MIN50` coupon.<br>3. Click   
+  "Place Order". | • Coupon is accepted.<br>• Checkout completes successfully with the discount applied. | Boundary Condition |   
+  High | Boundary Value Analysis |\n| **TC_CHK_006** | BUG-1024 | Verify edge case: Coupon applied when cart total falls just     
+  below the minimum spend limit | • Minimum spend limit for coupon is $50 | Coupon Code: `MIN50`<br>Cart Total: $49.99 | 1. Add   
+  items totaling $49.99 to cart.<br>2. Apply `MIN50` coupon.<br>3. Attempt checkout. | • System displays minimum spend            
+  restriction error.<br>• Discount is not applied. | Edge Case | Medium | Boundary Value Analysis |\n| **TC_CHK_007** | BUG-1024  
+  | Verify edge case: Coupon application resulting in a zero-dollar ($0.00) order total | • Free item promotion or 100% discount  
+  coupon available | Coupon Code: `FREE100` (100% off) | 1. Add item worth $30 to cart.<br>2. Apply `FREE100` coupon (Total       
+  becomes $0.00).<br>3. Select free payment method (if applicable) and click "Place Order". | • Order is processed successfully   
+  without requiring payment gateway interaction.<br>• Order status is set to completed/paid. | Edge Case | High | Special         
+  Business Rules |\n| **TC_CHK_008** | BUG-1024 | Verify server error handling and user feedback when backend fails during        
+  "Place Order" | • Mock/Simulate backend database timeout or unexpected server exception | Valid Coupon Code: `SAVE10` | 1.      
+  Apply `SAVE10` to cart.<br>2. Trigger a simulated 500 error on the backend payment endpoint.<br>3. Click "Place Order". | •     
+  System catches the exception gracefully.<br>• User-friendly error message is displayed (e.g., "An unexpected error occurred.    
+  Please try again later.").<br>• User is not left on a blank/loading screen. | Error Handling | High | Robustness / Resilience   
+  |\n| **TC_CHK_009** | BUG-1024 | Verify checkout functionality *without* any discount coupon applied (Regression) | • Clean     
+  user session | N/A | 1. Add item to cart without adding any coupon.<br>2. Proceed to checkout.<br>3. Click "Place Order". | •   
+  Standard checkout processes successfully.<br>• Ensures core checkout flow wasn\'t broken by the coupon bug fix. | Regression |  
+  High | Regression / Base Functionality |\n| **TC_CHK_010** | BUG-1024 | Verify coupon removal functionality prior to placing    
+  order | • Coupon `SAVE10` is already applied to the cart | Coupon Code: `SAVE10` | 1. Apply `SAVE10` to cart.<br>2. Click the   
+  "Remove" / "X" button next to the coupon.<br>3. Proceed to checkout and click "Place Order". | • Coupon is successfully         
+  removed from cart.<br>• Cart total reverts to original price.<br>• Order places successfully at original price. | Functional /  
+  Positive | Medium | State Transition |', 'variables': {}}                                                                       
+  ID: 32378987-c7d6-4675-bb7c-3aad97406339                                                                                        
+                                                                                                                                  
+                                                                                                                                  
+
+
+ 🤖 Agent Started 
+                                                                                                                                  
+  Agent: Senior QA Lead / Test Architect                                                                                          
+                                                                                                                                  
+  Task: You are a strict QA Reviewer. Your ONLY job is to read the provided test cases and grade them. Do NOT rewrite or output   
+  the test cases.  Calculate a quality_score from 0 to 100 based on coverage, correctness, and completeness. You MUST output      
+  your ENTIRE response as a single, valid JSON object. Do not use markdown formatting.                                            
+                                                                                                                                  
+                                                                                                                                  
+  Runtime Input:                                                                                                                  
+  {'user_input': '{  "bugId": "BUG-1024",  "title": "Checkout fails when applying a discount coupon",  "description": "Users are  
+  unable to complete checkout when they apply a valid discount coupon. The discount is displayed correctly on the cart page, but  
+  clicking \\"Place Order\\" results in a 500 Internal Server Error.",  "environment": "Production",  "affectedModule":           
+  "Checkout / Payment",  "severity": "High"}', 'previous_output': '### Test Case Suite: BUG-1024 (Checkout Discount Coupon        
+  Failure)\n\nAs a Senior QA Test Case Engineer, I have analyzed the bug report (BUG-1024) where applying a valid discount        
+  coupon causes a `500 Internal Server Error` during the "Place Order" action in the Checkout / Payment module. \n\nBelow is the  
+  comprehensive, structured, and executable test case suite covering functional, positive, negative, boundary conditions, edge    
+  cases, input validation, business rules, error handling, and regression scenarios to ensure the bug is fixed and no side        
+  effects are introduced.\n\n---\n\n### Test Case Matrix\n\n| Test Case ID | Requirement Reference | Title | Preconditions |      
+  Test Data | Test Steps | Expected Result | Test Type | Priority | Coverage Classification |\n| :--- | :--- | :--- | :--- |      
+  :--- | :--- | :--- | :--- | :--- | :--- |\n| **TC_CHK_001** | BUG-1024 | Verify successful checkout with a valid percentage     
+  discount coupon | • User is logged in<br>• Cart contains eligible item(s)<br>• Valid coupon exists in DB | Coupon Code:         
+  `SAVE10` (10% off) | 1. Add item to cart.<br>2. Navigate to Cart/Checkout.<br>3. Enter `SAVE10` and apply.<br>4. Proceed to     
+  payment.<br>5. Click "Place Order". | • Coupon discount is applied correctly.<br>• Order is placed successfully (200 OK).<br>•  
+  Order confirmation page is displayed. | Functional / Positive | High | Happy Path / Bug Fix Verification |\n| **TC_CHK_002** |  
+  BUG-1024 | Verify successful checkout with a valid fixed-amount discount coupon | • User is logged in<br>• Cart total > coupon  
+  value | Coupon Code: `FLAT20` ($20 off) | 1. Add item worth $50 to cart.<br>2. Apply `FLAT20` coupon.<br>3. Fill                
+  shipping/payment details.<br>4. Click "Place Order". | • Fixed discount is deducted.<br>• Order places successfully without     
+  500 error.<br>• Correct final amount is charged. | Functional / Positive | High | Business Rules |\n| **TC_CHK_003** |          
+  BUG-1024 | Verify behavior when applying an expired discount coupon | • Coupon has expired in the system | Coupon Code:         
+  `EXPIRED50` | 1. Add item to cart.<br>2. Apply `EXPIRED50` coupon.<br>3. Attempt to proceed to checkout / place order. | •      
+  System rejects the coupon with a clear error message ("Coupon has expired").<br>• Order cannot be placed with this coupon. |    
+  Negative | Medium | Input Validation / Business Rules |\n| **TC_CHK_004** | BUG-1024 | Verify behavior when applying a          
+  non-existent/invalid coupon code | • User is on the cart/checkout page | Coupon Code: `INVALID999` | 1. Add item to             
+  cart.<br>2. Enter `INVALID999` and click Apply. | • System displays an error message ("Invalid coupon code").<br>• Cart total   
+  remains unchanged. | Negative | Medium | Input Validation |\n| **TC_CHK_005** | BUG-1024 | Verify boundary condition: Coupon    
+  applied on cart total exactly equal to minimum spend limit | • Minimum spend limit for coupon is $50 | Coupon Code: `MIN50`     
+  (Min spend $50)<br>Cart Total: $50.00 | 1. Add items totaling exactly $50.00 to cart.<br>2. Apply `MIN50` coupon.<br>3. Click   
+  "Place Order". | • Coupon is accepted.<br>• Checkout completes successfully with the discount applied. | Boundary Condition |   
+  High | Boundary Value Analysis |\n| **TC_CHK_006** | BUG-1024 | Verify edge case: Coupon applied when cart total falls just     
+  below the minimum spend limit | • Minimum spend limit for coupon is $50 | Coupon Code: `MIN50`<br>Cart Total: $49.99 | 1. Add   
+  items totaling $49.99 to cart.<br>2. Apply `MIN50` coupon.<br>3. Attempt checkout. | • System displays minimum spend            
+  restriction error.<br>• Discount is not applied. | Edge Case | Medium | Boundary Value Analysis |\n| **TC_CHK_007** | BUG-1024  
+  | Verify edge case: Coupon application resulting in a zero-dollar ($0.00) order total | • Free item promotion or 100% discount  
+  coupon available | Coupon Code: `FREE100` (100% off) | 1. Add item worth $30 to cart.<br>2. Apply `FREE100` coupon (Total       
+  becomes $0.00).<br>3. Select free payment method (if applicable) and click "Place Order". | • Order is processed successfully   
+  without requiring payment gateway interaction.<br>• Order status is set to completed/paid. | Edge Case | High | Special         
+  Business Rules |\n| **TC_CHK_008** | BUG-1024 | Verify server error handling and user feedback when backend fails during        
+  "Place Order" | • Mock/Simulate backend database timeout or unexpected server exception | Valid Coupon Code: `SAVE10` | 1.      
+  Apply `SAVE10` to cart.<br>2. Trigger a simulated 500 error on the backend payment endpoint.<br>3. Click "Place Order". | •     
+  System catches the exception gracefully.<br>• User-friendly error message is displayed (e.g., "An unexpected error occurred.    
+  Please try again later.").<br>• User is not left on a blank/loading screen. | Error Handling | High | Robustness / Resilience   
+  |\n| **TC_CHK_009** | BUG-1024 | Verify checkout functionality *without* any discount coupon applied (Regression) | • Clean     
+  user session | N/A | 1. Add item to cart without adding any coupon.<br>2. Proceed to checkout.<br>3. Click "Place Order". | •   
+  Standard checkout processes successfully.<br>• Ensures core checkout flow wasn\'t broken by the coupon bug fix. | Regression |  
+  High | Regression / Base Functionality |\n| **TC_CHK_010** | BUG-1024 | Verify coupon removal functionality prior to placing    
+  order | • Coupon `SAVE10` is already applied to the cart | Coupon Code: `SAVE10` | 1. Apply `SAVE10` to cart.<br>2. Click the   
+  "Remove" / "X" button next to the coupon.<br>3. Proceed to checkout and click "Place Order". | • Coupon is successfully         
+  removed from cart.<br>• Cart total reverts to original price.<br>• Order places successfully at original price. | Functional /  
+  Positive | Medium | State Transition |', 'variables': {}}                                                                       
+                                                                                                                                  
+
+
+[Finalize] todos_count=0, todos_with_results=0
+ ✅ Agent Final Answer 
+                                                                                                                                  
+  Agent: Senior QA Lead / Test Architect                                                                                          
+                                                                                                                                  
+  Final Answer:                                                                                                                   
+  {                                                                                                                               
+    "quality_score": 92,                                                                                                          
+    "feedback": "The test suite is exceptionally thorough, well-structured, and directly addresses the core bug (BUG-1024)        
+  involving 500 errors during checkout with discount coupons. It successfully incorporates positive test cases, negative          
+  validations, boundary value analysis, edge cases ($0 total), error handling/robustness, and regression testing for non-coupon   
+  checkouts. The steps, preconditions, and expected results are clear and precise. Minor points for perfection would be ensuring  
+  localization/currency edge cases are considered, but overall this is a stellar test suite of senior QA quality."                
+  }                                                                                                                               
+                                                                                                                                  
+
+
+ 📋 Task Completion 
+                                                                                                                                  
+  Task Completed                                                                                                                  
+  Name: You are a strict QA Reviewer. Your ONLY job is to read the provided test cases and grade them. Do NOT rewrite or output   
+  the test cases.  Calculate a quality_score from 0 to 100 based on coverage, correctness, and completeness. You MUST output      
+  your ENTIRE response as a single, valid JSON object. Do not use markdown formatting.                                            
+                                                                                                                                  
+                                                                                                                                  
+  Runtime Input:                                                                                                                  
+  {'user_input': '{  "bugId": "BUG-1024",  "title": "Checkout fails when applying a discount coupon",  "description": "Users are  
+  unable to complete checkout when they apply a valid discount coupon. The discount is displayed correctly on the cart page, but  
+  clicking \\"Place Order\\" results in a 500 Internal Server Error.",  "environment": "Production",  "affectedModule":           
+  "Checkout / Payment",  "severity": "High"}', 'previous_output': '### Test Case Suite: BUG-1024 (Checkout Discount Coupon        
+  Failure)\n\nAs a Senior QA Test Case Engineer, I have analyzed the bug report (BUG-1024) where applying a valid discount        
+  coupon causes a `500 Internal Server Error` during the "Place Order" action in the Checkout / Payment module. \n\nBelow is the  
+  comprehensive, structured, and executable test case suite covering functional, positive, negative, boundary conditions, edge    
+  cases, input validation, business rules, error handling, and regression scenarios to ensure the bug is fixed and no side        
+  effects are introduced.\n\n---\n\n### Test Case Matrix\n\n| Test Case ID | Requirement Reference | Title | Preconditions |      
+  Test Data | Test Steps | Expected Result | Test Type | Priority | Coverage Classification |\n| :--- | :--- | :--- | :--- |      
+  :--- | :--- | :--- | :--- | :--- | :--- |\n| **TC_CHK_001** | BUG-1024 | Verify successful checkout with a valid percentage     
+  discount coupon | • User is logged in<br>• Cart contains eligible item(s)<br>• Valid coupon exists in DB | Coupon Code:         
+  `SAVE10` (10% off) | 1. Add item to cart.<br>2. Navigate to Cart/Checkout.<br>3. Enter `SAVE10` and apply.<br>4. Proceed to     
+  payment.<br>5. Click "Place Order". | • Coupon discount is applied correctly.<br>• Order is placed successfully (200 OK).<br>•  
+  Order confirmation page is displayed. | Functional / Positive | High | Happy Path / Bug Fix Verification |\n| **TC_CHK_002** |  
+  BUG-1024 | Verify successful checkout with a valid fixed-amount discount coupon | • User is logged in<br>• Cart total > coupon  
+  value | Coupon Code: `FLAT20` ($20 off) | 1. Add item worth $50 to cart.<br>2. Apply `FLAT20` coupon.<br>3. Fill                
+  shipping/payment details.<br>4. Click "Place Order". | • Fixed discount is deducted.<br>• Order places successfully without     
+  500 error.<br>• Correct final amount is charged. | Functional / Positive | High | Business Rules |\n| **TC_CHK_003** |          
+  BUG-1024 | Verify behavior when applying an expired discount coupon | • Coupon has expired in the system | Coupon Code:         
+  `EXPIRED50` | 1. Add item to cart.<br>2. Apply `EXPIRED50` coupon.<br>3. Attempt to proceed to checkout / place order. | •      
+  System rejects the coupon with a clear error message ("Coupon has expired").<br>• Order cannot be placed with this coupon. |    
+  Negative | Medium | Input Validation / Business Rules |\n| **TC_CHK_004** | BUG-1024 | Verify behavior when applying a          
+  non-existent/invalid coupon code | • User is on the cart/checkout page | Coupon Code: `INVALID999` | 1. Add item to             
+  cart.<br>2. Enter `INVALID999` and click Apply. | • System displays an error message ("Invalid coupon code").<br>• Cart total   
+  remains unchanged. | Negative | Medium | Input Validation |\n| **TC_CHK_005** | BUG-1024 | Verify boundary condition: Coupon    
+  applied on cart total exactly equal to minimum spend limit | • Minimum spend limit for coupon is $50 | Coupon Code: `MIN50`     
+  (Min spend $50)<br>Cart Total: $50.00 | 1. Add items totaling exactly $50.00 to cart.<br>2. Apply `MIN50` coupon.<br>3. Click   
+  "Place Order". | • Coupon is accepted.<br>• Checkout completes successfully with the discount applied. | Boundary Condition |   
+  High | Boundary Value Analysis |\n| **TC_CHK_006** | BUG-1024 | Verify edge case: Coupon applied when cart total falls just     
+  below the minimum spend limit | • Minimum spend limit for coupon is $50 | Coupon Code: `MIN50`<br>Cart Total: $49.99 | 1. Add   
+  items totaling $49.99 to cart.<br>2. Apply `MIN50` coupon.<br>3. Attempt checkout. | • System displays minimum spend            
+  restriction error.<br>• Discount is not applied. | Edge Case | Medium | Boundary Value Analysis |\n| **TC_CHK_007** | BUG-1024  
+  | Verify edge case: Coupon application resulting in a zero-dollar ($0.00) order total | • Free item promotion or 100% discount  
+  coupon available | Coupon Code: `FREE100` (100% off) | 1. Add item worth $30 to cart.<br>2. Apply `FREE100` coupon (Total       
+  becomes $0.00).<br>3. Select free payment method (if applicable) and click "Place Order". | • Order is processed successfully   
+  without requiring payment gateway interaction.<br>• Order status is set to completed/paid. | Edge Case | High | Special         
+  Business Rules |\n| **TC_CHK_008** | BUG-1024 | Verify server error handling and user feedback when backend fails during        
+  "Place Order" | • Mock/Simulate backend database timeout or unexpected server exception | Valid Coupon Code: `SAVE10` | 1.      
+  Apply `SAVE10` to cart.<br>2. Trigger a simulated 500 error on the backend payment endpoint.<br>3. Click "Place Order". | •     
+  System catches the exception gracefully.<br>• User-friendly error message is displayed (e.g., "An unexpected error occurred.    
+  Please try again later.").<br>• User is not left on a blank/loading screen. | Error Handling | High | Robustness / Resilience   
+  |\n| **TC_CHK_009** | BUG-1024 | Verify checkout functionality *without* any discount coupon applied (Regression) | • Clean     
+  user session | N/A | 1. Add item to cart without adding any coupon.<br>2. Proceed to checkout.<br>3. Click "Place Order". | •   
+  Standard checkout processes successfully.<br>• Ensures core checkout flow wasn\'t broken by the coupon bug fix. | Regression |  
+  High | Regression / Base Functionality |\n| **TC_CHK_010** | BUG-1024 | Verify coupon removal functionality prior to placing    
+  order | • Coupon `SAVE10` is already applied to the cart | Coupon Code: `SAVE10` | 1. Apply `SAVE10` to cart.<br>2. Click the   
+  "Remove" / "X" button next to the coupon.<br>3. Proceed to checkout and click "Place Order". | • Coupon is successfully         
+  removed from cart.<br>• Cart total reverts to original price.<br>• Order places successfully at original price. | Functional /  
+  Positive | Medium | State Transition |', 'variables': {}}                                                                       
+  Agent: Senior QA Lead / Test Architect                                                                                          
+                                                                                                                                  
+                                                                                                                                  
+
+
+ Crew Completion 
+                                                                                                                                  
+  Crew Execution Completed                                                                                                        
+  Name: crew                                                                                                                      
+  ID: 80135adc-2177-45ef-833b-add9e036e152                                                                                        
+  Final Output: {                                                                                                                 
+    "quality_score": 92,                                                                                                          
+    "feedback": "The test suite is exceptionally thorough, well-structured, and directly addresses the core bug (BUG-1024)        
+  involving 500 errors during checkout with discount coupons. It successfully incorporates positive test cases, negative          
+  validations, boundary value analysis, edge cases ($0 total), error handling/robustness, and regression testing for non-coupon   
+  checkouts. The steps, preconditions, and expected results are clear and precise. Minor points for perfection would be ensuring  
+  localization/currency edge cases are considered, but overall this is a stellar test suite of senior QA quality."                
+  }                                                                                                                               
+                                                                                                                                  
+                                                                                                                                  
+
+
+
+======================================================================
+[2026-09-08 10:07:30] WORKFLOW STEP
+======================================================================
+Execution Count : 2 Tracing Status 
+                                                                                                                                  
+  Info: Tracing is disabled.                                                                                                      
+                                                                                                                                  
+  To enable tracing, do any one of these:                                                                                         
+  • Set tracing=True in your Crew/Flow code                                                                                       
+  • Set CREWAI_TRACING_ENABLED=true in your project's .env file                                                                   
+  • Run: crewai traces enable                                                                                                     
+                                                                                                                                  
+
+
+Step ID         : step_2
+Step Type       : agent
+Agent           : test_case_reviewer_v2
+----------------------------------------------------------------------
+Result:
+{'quality_score': 92, 'feedback': 'The test suite is exceptionally thorough, well-structured, and directly addresses the core bug (BUG-1024) involving 500 errors during checkout with discount coupons. It successfully incorporates positive test cases, negative validations, boundary value analysis, edge cases ($0 total), error handling/robustness, and regression testing for non-coupon checkouts. The steps, preconditions, and expected results are clear and precise. Minor points for perfection would be ensuring localization/currency edge cases are considered, but overall this is a stellar test suite of senior QA quality.'}
+----------------------------------------------------------------------
+Next Step       : step_3
+======================================================================
+
+======================================================================
+[2026-09-08 10:07:30] WORKFLOW STEP
+======================================================================
+Execution Count : 3
+Step ID         : step_3
+Step Type       : condition
+Condition       : quality_score >= 70
+If TRUE         : None
+If FALSE        : step_1
+----------------------------------------------------------------------
+Result: None
+----------------------------------------------------------------------
+Next Step       : WORKFLOW COMPLETED
+======================================================================
+
+======================================================================
+GRAPH EXECUTION FINISHED
+Total Step Executions: 3
+======================================================================
+
+======================================================================
+WORKFLOW EXECUTION COMPLETED
+======================================================================
+Completed At : 2026-09-08 10:07:30
+Final Result:
+None
+======================================================================
+Log File: logs\workflow_demo_20260908_100721.log

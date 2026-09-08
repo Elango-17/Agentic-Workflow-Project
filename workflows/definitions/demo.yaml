@@ -1,7 +1,7 @@
-id: demo_workflow
-name: demo workflow
+id: demo
+name: demo
 description: demo
-practice_area: testing
+practice_area: demo
 good_at: demo
 agents:
 - test_case_generator_v1
@@ -9,15 +9,17 @@ agents:
 execution:
   type: graph
   steps:
-  - id: step1
+  - id: step_1
     type: agent
     agent: test_case_generator_v1
-    next: step2
-  - id: step2
+    next: step_2
+
+  - id: step_2
     type: agent
     agent: test_case_reviewer_v2
-    next: step3
-  - id: step3
+    next: step_3
+
+  - id: step_3
     type: condition
-    condition: quality_score >= 90
-    if_false: step1
+    condition: quality_score >= 70
+    if_false: step_1

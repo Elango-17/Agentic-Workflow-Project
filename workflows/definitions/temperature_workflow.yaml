@@ -1,9 +1,0 @@
-id: temperature_workflow
-name: Temperature Workflow
-description: Demo workflow
-practice_area: Testing
-good_at: fetching
-agents:
-- temperature_fetcher_agent
-- weather_lookup_agent
-execution: null

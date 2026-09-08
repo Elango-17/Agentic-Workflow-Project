@@ -14,6 +14,12 @@ from cli.ui import (
     info,
     success,
 )
+
+from workflows.workflow_selection import (
+    select_practice_area,
+    select_good_at,
+)
+
 from workflows.workflow import (
     WorkflowSpec,
 )
@@ -42,13 +48,9 @@ def create_workflow(
         "Description"
     )
 
-    practice_area = typer.prompt(
-        "Practice Area"
-    )
+    practice_area = select_practice_area()
 
-    good_at = typer.prompt(
-        "Good At"
-    )
+    good_at = select_good_at()
 
     # -----------------------------------------
     # Build Execution Plan

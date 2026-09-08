@@ -1,8 +1,8 @@
 import typer
 from rich.console import Console
 
-from src.cli.docker_runner import run_docker
-from src.cli.hosting import select_hosting
+# from src.cli.docker_runner import run_docker
+# from src.cli.hosting import select_hosting
 from agents.agent_commands import agent_menu
 from tools.tool_commands import tool_menu
 from workflows.workflow_commands import workflow_menu
@@ -70,7 +70,13 @@ Main Menu
 
             error(str(exc))
 
+def main():
+    main_menu()
 
+if __name__ == "__main__":
+    main()
+
+"""
 def main():
 
     hosting = select_hosting()
@@ -88,3 +94,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+"""
