@@ -2,7 +2,9 @@ id: test_loop_workflow
 name: Test Loop Workflow
 description: Test workflow for validating loop execution
 practice_area: Testing
-good_at: loop_execution
+good_at:
+    - validation
+    - analyser
 agents:
 - test_case_generator_v1
 
@@ -14,5 +16,5 @@ execution:
     - id: step_1
       type: loop
       agent: test_case_generator_v1
-      max_iterations: 2
+      max_iterations: 3
       next: null

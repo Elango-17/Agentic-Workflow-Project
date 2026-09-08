@@ -1,8 +1,10 @@
 id: demo
 name: demo
 description: demo
-practice_area: demo
-good_at: demo
+practice_area: Quality Engineering
+good_at:
+  - validation
+  - analyser
 agents:
 - test_case_generator_v1
 - test_case_reviewer_v2

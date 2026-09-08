@@ -2,7 +2,9 @@ id: ast_extractor_workflow
 name: AST Extractor Workflow
 description: This workflow will help to extract AST structure of the repo
 practice_area: Quality Engineer
-good_at: extractor, analyser
+good_at:
+   - validation
+   - analyser
 agents:
 - senior_python_static_analysis_engineer
 - senior_python_code_quality_and_security_engineer

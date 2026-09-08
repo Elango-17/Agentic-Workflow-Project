@@ -2,7 +2,9 @@ id: orchestraion_workflow
 name: Orchestraion Workflow
 description: Demo Orchestration Workflow
 practice_area: Testing
-good_at: generation, validation
+good_at:
+    - extractor
+    - analyser
 
 agents:
   - requirement_analyzer_v1
